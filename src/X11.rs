@@ -9,6 +9,7 @@ pub use Connection_Status::ConnectionStatus;
 pub use Screen_Setup::ScreenSetup;
 pub use Window_Geometry::WindowGeometry;
 pub use Window_Children::WindowChildren;
+pub use Window_Attribute::WindowAttributeSet;
 
 mod xcb;
 
@@ -486,6 +487,15 @@ impl Connection {
     pub fn make_window_children_request<'a>(&'a self, window: Window) -> (Window_Children::Cookie<'a>, RequestDelay<'a>) {
         Window_Children::make_request(self, window)
     }
+
+    pub fn change_window_attributes<'a>(&'a self, window: Window, value_mask: WindowAttributeSet, values: &[u32]) -> RequestDelay<'a> {
+        let request_delay = RequestDelay::new(self);
+        unsafe {
+            let slice: std::raw::Slice<u32> = std::mem::transmute(values);
+            xcb::xcb_change_window_attributes(self.data, window.id(), value_mask.bits(), slice.data);
+        }
+        request_delay
+    }
 }
 
 impl Drop for Connection {
@@ -508,4 +518,108 @@ pub struct Coordinate {
 pub struct RectangularSize {
     pub width: u16,
     pub height: u16
+}
+
+pub mod Window_Attribute {
+use xcb;
+
+pub type WindowAttributeInt = xcb::xcb_cw_t;
+bitflags!{
+    #[deriving(Show)] flags WindowAttributeSet: WindowAttributeInt {
+        static back_pixmap        = xcb::XCB_CW_BACK_PIXMAP,
+        static back_pixel         = xcb::XCB_CW_BACKING_PIXEL,
+        static border_pixmap      = xcb::XCB_CW_BORDER_PIXMAP,
+        static border_pixel       = xcb::XCB_CW_BORDER_PIXEL,
+        static bit_gravity        = xcb::XCB_CW_BIT_GRAVITY,
+        static win_gravity        = xcb::XCB_CW_WIN_GRAVITY,
+        static backing_store      = xcb::XCB_CW_BACKING_STORE,
+        static backing_planes     = xcb::XCB_CW_BACKING_PLANES,
+        static backing_pixel      = xcb::XCB_CW_BACK_PIXEL,
+        static override_reddirect = xcb::XCB_CW_OVERRIDE_REDIRECT,
+        static save_under         = xcb::XCB_CW_SAVE_UNDER,
+        static event_mask         = xcb::XCB_CW_EVENT_MASK,
+        static dont_propagate     = xcb::XCB_CW_DONT_PROPAGATE,
+        static colormap           = xcb::XCB_CW_COLORMAP,
+        static cursor             = xcb::XCB_CW_CURSOR
+    }
+}
+
+pub mod Back_Pixmap {
+    pub use xcb;
+    pub type BackPixmapInt = xcb::xcb_back_pixmap_t;
+    bitflags!{
+        #[deriving(Show)] flags BackPixmapSet: BackPixmapInt {
+            static none            = xcb::XCB_BACK_PIXMAP_NONE,
+            static parent_relative = xcb::XCB_BACK_PIXMAP_PARENT_RELATIVE
+        }
+    }
+}
+
+pub mod Backing_Store {
+    pub use xcb;
+    pub type BackingStoreInt = xcb::xcb_backing_store_t;
+    bitflags!{
+        #[deriving(Show)] flags BackingStoreSet: BackingStoreInt {
+            static not_useful  = xcb::XCB_BACKING_STORE_NOT_USEFUL,
+            static when_mapped = xcb::XCB_BACKING_STORE_WHEN_MAPPED,
+            static always      = xcb::XCB_BACKING_STORE_ALWAYS
+        }
+    }
+}
+
+pub mod Event {
+    pub use xcb;
+    pub type EventInt = xcb::xcb_event_mask_t;
+    bitflags!{
+        #[deriving(Show)] flags EventSet: EventInt {
+            static no_event              = xcb::XCB_EVENT_MASK_NO_EVENT,
+            static key_press             = xcb::XCB_EVENT_MASK_KEY_PRESS,
+            static key_release           = xcb::XCB_EVENT_MASK_KEY_RELEASE,
+            static button_press          = xcb::XCB_EVENT_MASK_BUTTON_PRESS,
+            static button_release        = xcb::XCB_EVENT_MASK_BUTTON_RELEASE,
+            static enter_window          = xcb::XCB_EVENT_MASK_ENTER_WINDOW,
+            static leave_window          = xcb::XCB_EVENT_MASK_LEAVE_WINDOW,
+            static pointer_motion        = xcb::XCB_EVENT_MASK_POINTER_MOTION,
+            static motion_hint           = xcb::XCB_EVENT_MASK_POINTER_MOTION_HINT,
+            static button_1_motion       = xcb::XCB_EVENT_MASK_BUTTON_1_MOTION,
+            static button_2_motion       = xcb::XCB_EVENT_MASK_BUTTON_2_MOTION,
+            static button_3_motion       = xcb::XCB_EVENT_MASK_BUTTON_3_MOTION,
+            static button_4_motion       = xcb::XCB_EVENT_MASK_BUTTON_4_MOTION,
+            static button_5_motion       = xcb::XCB_EVENT_MASK_BUTTON_5_MOTION,
+            static button_motion         = xcb::XCB_EVENT_MASK_BUTTON_MOTION,
+            static keymap_state          = xcb::XCB_EVENT_MASK_KEYMAP_STATE,
+            static exposure              = xcb::XCB_EVENT_MASK_EXPOSURE,
+            static visibility_change     = xcb::XCB_EVENT_MASK_VISIBILITY_CHANGE,
+            static structure_notify      = xcb::XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+            static resize_redirect       = xcb::XCB_EVENT_MASK_RESIZE_REDIRECT,
+            static substructure_notify   = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY,
+            static substructure_redirect = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,
+            static focus_change          = xcb::XCB_EVENT_MASK_FOCUS_CHANGE,
+            static property_change       = xcb::XCB_EVENT_MASK_PROPERTY_CHANGE,
+            static color_map_change      = xcb::XCB_EVENT_MASK_COLOR_MAP_CHANGE,
+            static owner_grap_button     = xcb::XCB_EVENT_MASK_OWNER_GRAB_BUTTON
+        }
+    }
+}
+
+pub mod Colormap {
+    pub use xcb;
+    pub type ColorMapInt = xcb::xcb_colormap_enum_t;
+    bitflags!{
+        #[deriving(Show)] flags ColorMapSet: ColorMapInt {
+            static none = xcb::XCB_COLORMAP_NONE
+        }
+    }
+}
+
+pub mod Cursor {
+    pub use xcb;
+    pub type CursorInt = xcb::xcb_cursor_enum_t;
+    bitflags!{
+        #[deriving(Show)] flags CursorSet: CursorInt {
+            static none = xcb::XCB_CURSOR_NONE
+        }
+    }
+}
+
 }

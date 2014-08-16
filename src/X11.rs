@@ -90,11 +90,11 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn get_id(&self) -> u32 { self.data }
+    pub fn id(&self) -> u32 { self.data }
 }
 
 impl Screen {
-    pub fn get_root_window(&self) -> Window {
+    pub fn root_window(&self) -> Window {
         Window { data: self.data.root }
     }
 }
@@ -253,7 +253,7 @@ pub mod Window_Geometry {
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_get_geometry(connection.data, window.get_id()) },
+            data: unsafe { xcb::xcb_get_geometry(connection.data, window.id()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -332,7 +332,7 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_query_tree(connection.data, window.get_id()) },
+            data: unsafe { xcb::xcb_query_tree(connection.data, window.id()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -471,7 +471,7 @@ impl Connection {
     }
 
     ///See: http://xcb.freedesktop.org/manual/group__XCB__Core__API.html#gafc379a27800bf735818a0760bd036321
-    pub fn get_setup<'a>(&'a self) -> Setup<'a> {
+    pub fn setup<'a>(&'a self) -> Setup<'a> {
         Setup {
             data: unsafe { xcb::xcb_get_setup(self.data) },
             marker: std::kinds::marker::ContravariantLifetime

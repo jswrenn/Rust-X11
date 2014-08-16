@@ -111,12 +111,12 @@ pub struct ScreenSetup<'a> {
 }
 
 impl<'a> ScreenSetup<'a> {
-    pub fn new<'a>(setup: &'a Setup) -> ScreenSetup<'a> {
+    pub fn new(setup: &'a Setup) -> ScreenSetup<'a> {
         ScreenSetup { begin: unsafe { xcb::xcb_setup_roots_iterator(setup.data)  },
                       marker: std::kinds::marker::ContravariantLifetime }
     }
     
-    pub fn iter<'a>(&'a self) -> Items<'a> {
+    pub fn iter(&'a self) -> Items<'a> {
         Items {
             current: self.begin,
             marker: self.marker

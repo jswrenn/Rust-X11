@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Cookie` trait in crate `X11`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Cookie">
+
+    <title>X11::Cookie - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>X11</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='Connection_Error/index.html'>Connection_Error</a><a class='mod ' href='Connection_Status/index.html'>Connection_Status</a><a class='mod ' href='Screen_Setup/index.html'>Screen_Setup</a><a class='mod ' href='Window_Children/index.html'>Window_Children</a><a class='mod ' href='Window_Geometry/index.html'>Window_Geometry</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Connection.html'>Connection</a><a class='struct ' href='struct.Coordinate.html'>Coordinate</a><a class='struct ' href='struct.RectangularSize.html'>RectangularSize</a><a class='struct ' href='struct.RequestDelay.html'>RequestDelay</a><a class='struct ' href='struct.RequestError.html'>RequestError</a><a class='struct ' href='struct.Screen.html'>Screen</a><a class='struct ' href='struct.Setup.html'>Setup</a><a class='struct ' href='struct.Window.html'>Window</a></div><div class='block trait'><h2>Traits</h2><a class='trait current' href='trait.Cookie.html'>Cookie</a><a class='trait ' href='trait.Reply.html'>Reply</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><div class='in-band'>Trait <a href='index.html'>X11</a>&#8203;::<a class='trait' href=''>Cookie</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-20754' href='../src/X11/src/X11.rs.html#156-158'>[src]</a></div></h1>
+<pre class='rust trait'>pub trait Cookie&lt;'a, R: <a class='trait' href='../X11/trait.Reply.html' title='X11::Reply'>Reply</a>&gt;: <a class='trait' href='http://doc.rust-lang.org/master/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> {
+    fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;;
+}</pre><div class='docblock'><p>Implementors of this trait represent a pending reply from the X server made via an asynchronous
+request.</p>
+</div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.wait_for_reply' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;</code></h3></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;'a&gt; <a class='trait' href='../X11/trait.Cookie.html' title='X11::Cookie'>Cookie</a>&lt;'a, <a class='struct' href='../X11/Window_Geometry/struct.Reply.html' title='X11::Window_Geometry::Reply'>Reply</a>&gt; for <a class='struct' href='../X11/Window_Geometry/struct.Cookie.html' title='X11::Window_Geometry::Cookie'>Cookie</a>&lt;'a&gt;</code></li>
+<li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;'a&gt; <a class='trait' href='../X11/trait.Cookie.html' title='X11::Cookie'>Cookie</a>&lt;'a, <a class='struct' href='../X11/Window_Children/struct.Reply.html' title='X11::Window_Children::Reply'>Reply</a>&gt; for <a class='struct' href='../X11/Window_Children/struct.Cookie.html' title='X11::Window_Children::Cookie'>Cookie</a>&lt;'a&gt;</code></li>
+</ul><script type="text/javascript" async
+                              src="../implementors/X11/trait.Cookie.js">
+                      </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "X11";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

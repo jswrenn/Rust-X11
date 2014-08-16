@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Connection` struct in crate `X11`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Connection">
+
+    <title>X11::Connection - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='index.html'>X11</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='Connection_Error/index.html'>Connection_Error</a><a class='mod ' href='Connection_Status/index.html'>Connection_Status</a><a class='mod ' href='Screen_Setup/index.html'>Screen_Setup</a><a class='mod ' href='Window_Children/index.html'>Window_Children</a><a class='mod ' href='Window_Geometry/index.html'>Window_Geometry</a></div><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Connection.html'>Connection</a><a class='struct ' href='struct.Coordinate.html'>Coordinate</a><a class='struct ' href='struct.RectangularSize.html'>RectangularSize</a><a class='struct ' href='struct.RequestDelay.html'>RequestDelay</a><a class='struct ' href='struct.RequestError.html'>RequestError</a><a class='struct ' href='struct.Screen.html'>Screen</a><a class='struct ' href='struct.Setup.html'>Setup</a><a class='struct ' href='struct.Window.html'>Window</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Cookie.html'>Cookie</a><a class='trait ' href='trait.Reply.html'>Reply</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>X11</a>&#8203;::<a class='struct' href=''>Connection</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-19653' href='../src/X11/src/X11.rs.html#19-21'>[src]</a></div></h1>
+<pre class='rust struct'>pub struct Connection {
+    // some fields omitted
+}</pre><div class='docblock'><p>Represents a connection to an X server.
+Will automatically disconnect from the X server at end of object lifetime.
+Guaranteed to be a valid connection upon successful construction <strong>but not after</strong>.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../X11/struct.Connection.html' title='X11::Connection'>Connection</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../X11/struct.Connection.html' title='X11::Connection'>Connection</a>, <a class='type' href='../X11/Connection_Error/type.ConnectionError.html' title='X11::Connection_Error::ConnectionError'>ConnectionError</a>&gt;</code></h4>
+<div class='docblock'><p>Construct a connection to the X server only if it can be shown to be an initially valid
+connection.
+Connects to the X server specified by the $DISPLAY environment variable (if $DISPLAY
+can be parsed).</p>
+</div><h4 id='method.new_with_default_screen' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new_with_default_screen' class='fnname'>new_with_default_screen</a>() -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../X11/struct.Connection.html' title='X11::Connection'>Connection</a>, <a class='type' href='../X11/Connection_Error/type.ConnectionError.html' title='X11::Connection_Error::ConnectionError'>ConnectionError</a>&gt;, <a class='type' href='http://doc.rust-lang.org/master/core/option/type.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../X11/struct.Screen.html' title='X11::Screen'>Screen</a>&gt;)</a></code></h4>
+<div class='docblock'><p>Does the same as new() but also returns the default Screen if one exists.</p>
+</div><h4 id='method.status' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.status' class='fnname'>status</a>(&amp;self) -&gt; <a class='type' href='../X11/Connection_Status/type.ConnectionStatus.html' title='X11::Connection_Status::ConnectionStatus'>ConnectionStatus</a></code></h4>
+<div class='docblock'><p>Test if connected to the X server and if not return why.</p>
+</div><h4 id='method.is_valid' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.is_valid' class='fnname'>is_valid</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Test if connected to the X server.</p>
+</div><h4 id='method.flush' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.flush' class='fnname'>flush</a>(&amp;self)</code></h4>
+<h4 id='method.setup' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.setup' class='fnname'>setup</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../X11/struct.Setup.html' title='X11::Setup'>Setup</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>See: <a href="http://xcb.freedesktop.org/manual/group__XCB__Core__API.html#gafc379a27800bf735818a0760bd036321">http://xcb.freedesktop.org/manual/group__XCB__Core__API.html#gafc379a27800bf735818a0760bd036321</a></p>
+</div><h4 id='method.make_window_geometry_request' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.make_window_geometry_request' class='fnname'>make_window_geometry_request</a>&lt;'a&gt;(&amp;'a self, window: <a class='struct' href='../X11/struct.Window.html' title='X11::Window'>Window</a>) -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='../X11/Window_Geometry/struct.Cookie.html' title='X11::Window_Geometry::Cookie'>Cookie</a>&lt;'a&gt;, <a class='struct' href='../X11/struct.RequestDelay.html' title='X11::RequestDelay'>RequestDelay</a>&lt;'a&gt;)</a></code></h4>
+<h4 id='method.make_window_children_request' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.make_window_children_request' class='fnname'>make_window_children_request</a>&lt;'a&gt;(&amp;'a self, window: <a class='struct' href='../X11/struct.Window.html' title='X11::Window'>Window</a>) -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='../X11/Window_Children/struct.Cookie.html' title='X11::Window_Children::Cookie'>Cookie</a>&lt;'a&gt;, <a class='struct' href='../X11/struct.RequestDelay.html' title='X11::RequestDelay'>RequestDelay</a>&lt;'a&gt;)</a></code></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/master/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../X11/struct.Connection.html' title='X11::Connection'>Connection</a></code></h3><div class='impl-methods'><h4 id='method.drop' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Will disconnect the Connection from the X server.</p>
+</div></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/master/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../X11/struct.Connection.html' title='X11::Connection'>Connection</a></code></h3><div class='impl-methods'><h4 id='method.fmt' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/master/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "X11";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>

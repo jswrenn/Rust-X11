@@ -66,6 +66,12 @@ pub struct Setup<'a> {
     marker: std::kinds::marker::ContravariantLifetime<'a>
 }
 
+impl<'a> Setup<'a> {
+    pub fn screen_setup(&'a self) -> ScreenSetup<'a> {
+        ScreenSetup::new(self)
+    }
+}
+
 //This is like a Haskell newtype.
 //Adding/removing/changing fields invalidates code which transmutes between the underlying type
 //and the struct.
@@ -427,7 +433,7 @@ impl Connection {
 
     fn screen_of_display(&self, mut screen_number: libc::c_int) -> Option<Screen> {
         let setup = self.setup();
-        let screen_setup = ScreenSetup::new(&setup);
+        let screen_setup = setup.screen_setup();
         for screen in screen_setup.iter() {
             if screen_number == 0 {
                 return Some(*screen)

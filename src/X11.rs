@@ -545,7 +545,7 @@ bitflags!{
 }
 
 pub mod Back_Pixmap {
-    pub use xcb;
+    use xcb;
     pub type BackPixmapInt = xcb::xcb_back_pixmap_t;
     bitflags!{
         #[deriving(Show)] flags BackPixmapSet: BackPixmapInt {
@@ -556,7 +556,7 @@ pub mod Back_Pixmap {
 }
 
 pub mod Backing_Store {
-    pub use xcb;
+    use xcb;
     pub type BackingStoreInt = xcb::xcb_backing_store_t;
     bitflags!{
         #[deriving(Show)] flags BackingStoreSet: BackingStoreInt {
@@ -568,7 +568,7 @@ pub mod Backing_Store {
 }
 
 pub mod Event {
-    pub use xcb;
+    use xcb;
     pub type EventInt = xcb::xcb_event_mask_t;
     bitflags!{
         #[deriving(Show)] flags EventSet: EventInt {
@@ -603,7 +603,7 @@ pub mod Event {
 }
 
 pub mod Colormap {
-    pub use xcb;
+    use xcb;
     pub type ColorMapInt = xcb::xcb_colormap_enum_t;
     bitflags!{
         #[deriving(Show)] flags ColorMapSet: ColorMapInt {
@@ -613,7 +613,7 @@ pub mod Colormap {
 }
 
 pub mod Cursor {
-    pub use xcb;
+    use xcb;
     pub type CursorInt = xcb::xcb_cursor_enum_t;
     bitflags!{
         #[deriving(Show)] flags CursorSet: CursorInt {

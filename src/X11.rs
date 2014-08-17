@@ -555,15 +555,59 @@ pub mod Back_Pixmap {
     }
 }
 
+pub mod Bit_Gravity {
+    use xcb;
+    pub type BitGravityInt = xcb::xcb_gravity_t;
+    //FIXME Make certain BitGravityInt = u32 = xcb::xcb_gravity_t.
+    //(repr won't take BitGravityInt.)
+    #[repr(u32)]
+    #[deriving(Show)]
+    enum BitGravity {
+        BitForget  = xcb::XCB_GRAVITY_BIT_FORGET,
+        NorthWest  = xcb::XCB_GRAVITY_NORTH_WEST,
+        North      = xcb::XCB_GRAVITY_NORTH,
+        NorthEast  = xcb::XCB_GRAVITY_NORTH_EAST,
+        West       = xcb::XCB_GRAVITY_WEST,
+        Center     = xcb::XCB_GRAVITY_CENTER,
+        East       = xcb::XCB_GRAVITY_EAST,
+        SouthWest  = xcb::XCB_GRAVITY_SOUTH_WEST,
+        South      = xcb::XCB_GRAVITY_SOUTH,
+        Static     = xcb::XCB_GRAVITY_STATIC
+    }
+}
+
+pub mod Win_Gravity {
+    use xcb;
+    pub type WinGravityInt = xcb::xcb_gravity_t;
+    //FIXME Make certain WinGravityInt = u32 = xcb::xcb_gravity_t.
+    //(repr won't take WinGravityInt.)
+    #[repr(u32)]
+    #[deriving(Show)]
+    enum WinGravity {
+        WinUnmap   = xcb::XCB_GRAVITY_WIN_UNMAP,
+        NorthWest  = xcb::XCB_GRAVITY_NORTH_WEST,
+        North      = xcb::XCB_GRAVITY_NORTH,
+        NorthEast  = xcb::XCB_GRAVITY_NORTH_EAST,
+        West       = xcb::XCB_GRAVITY_WEST,
+        Center     = xcb::XCB_GRAVITY_CENTER,
+        East       = xcb::XCB_GRAVITY_EAST,
+        SouthWest  = xcb::XCB_GRAVITY_SOUTH_WEST,
+        South      = xcb::XCB_GRAVITY_SOUTH,
+        Static     = xcb::XCB_GRAVITY_STATIC
+    }
+}
+
 pub mod Backing_Store {
     use xcb;
     pub type BackingStoreInt = xcb::xcb_backing_store_t;
-    bitflags!{
-        #[deriving(Show)] flags BackingStoreSet: BackingStoreInt {
-            static not_useful  = xcb::XCB_BACKING_STORE_NOT_USEFUL,
-            static when_mapped = xcb::XCB_BACKING_STORE_WHEN_MAPPED,
-            static always      = xcb::XCB_BACKING_STORE_ALWAYS
-        }
+    //FIXME Make certain BackingStoreInt = u32 = xcb::xcb_backing_store_t.
+    //(repr won't take BackingStoreInt)
+    #[repr(u32)]
+    #[deriving(Show)]
+    enum BackingStore {
+        NotUseful  = xcb::XCB_BACKING_STORE_NOT_USEFUL,
+        WhenMapped = xcb::XCB_BACKING_STORE_WHEN_MAPPED,
+        Always     = xcb::XCB_BACKING_STORE_ALWAYS
     }
 }
 

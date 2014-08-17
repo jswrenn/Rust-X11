@@ -522,6 +522,13 @@ pub struct RectangularSize {
 
 pub mod Window_Attribute {
 use xcb;
+pub use self::Back_Pixmap::BackPixmapSet;
+pub use self::Bit_Gravity::BitGravity;
+pub use self::Win_Gravity::WinGravity;
+pub use self::Backing_Store::BackingStore;
+pub use self::Event::EventSet;
+pub use self::Colormap::ColormapSet;
+pub use self::Cursor::CursorSet;
 
 pub type WindowAttributeInt = xcb::xcb_cw_t;
 bitflags!{
@@ -562,7 +569,7 @@ pub mod Bit_Gravity {
     //(repr won't take BitGravityInt.)
     #[repr(u32)]
     #[deriving(Show)]
-    enum BitGravity {
+    pub enum BitGravity {
         BitForget  = xcb::XCB_GRAVITY_BIT_FORGET,
         NorthWest  = xcb::XCB_GRAVITY_NORTH_WEST,
         North      = xcb::XCB_GRAVITY_NORTH,
@@ -583,7 +590,7 @@ pub mod Win_Gravity {
     //(repr won't take WinGravityInt.)
     #[repr(u32)]
     #[deriving(Show)]
-    enum WinGravity {
+    pub enum WinGravity {
         WinUnmap   = xcb::XCB_GRAVITY_WIN_UNMAP,
         NorthWest  = xcb::XCB_GRAVITY_NORTH_WEST,
         North      = xcb::XCB_GRAVITY_NORTH,
@@ -604,7 +611,7 @@ pub mod Backing_Store {
     //(repr won't take BackingStoreInt)
     #[repr(u32)]
     #[deriving(Show)]
-    enum BackingStore {
+    pub enum BackingStore {
         NotUseful  = xcb::XCB_BACKING_STORE_NOT_USEFUL,
         WhenMapped = xcb::XCB_BACKING_STORE_WHEN_MAPPED,
         Always     = xcb::XCB_BACKING_STORE_ALWAYS
@@ -648,9 +655,9 @@ pub mod Event {
 
 pub mod Colormap {
     use xcb;
-    pub type ColorMapInt = xcb::xcb_colormap_enum_t;
+    pub type ColormapInt = xcb::xcb_colormap_enum_t;
     bitflags!{
-        #[deriving(Show)] flags ColorMapSet: ColorMapInt {
+        #[deriving(Show)] flags ColormapSet: ColormapInt {
             static none = xcb::XCB_COLORMAP_NONE
         }
     }

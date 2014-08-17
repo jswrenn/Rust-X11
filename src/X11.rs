@@ -10,6 +10,7 @@ pub use Screen_Setup::ScreenSetup;
 pub use Window_Geometry::WindowGeometry;
 pub use Window_Children::WindowChildren;
 pub use Window_Attribute::WindowAttributeSet;
+pub use Window_Attribute::WindowSubAttributeSet;
 
 mod xcb;
 
@@ -488,11 +489,11 @@ impl Connection {
         Window_Children::make_request(self, window)
     }
 
-    pub fn change_window_attributes<'a>(&'a self, window: Window, window_attributes: WindowAttributeSet, window_sub_attributes: &[u32]) -> RequestDelay<'a> {
+    pub fn change_window_attributes<'a>(&'a self, window: Window, window_attributes: WindowAttributeSet, window_sub_attributes: WindowSubAttributeSet) -> RequestDelay<'a> {
         let request_delay = RequestDelay::new(self);
+        let sub_attributes = window_sub_attributes.to_array_for_attr(window_attributes);
         unsafe {
-            let slice: std::raw::Slice<u32> = std::mem::transmute(window_sub_attributes);
-            xcb::xcb_change_window_attributes(self.data, window.id(), window_attributes.bits(), slice.data);
+            xcb::xcb_change_window_attributes(self.data, window.id(), window_attributes.bits(), std::mem::transmute(&sub_attributes));
         }
         request_delay
     }
@@ -530,6 +531,72 @@ pub use self::Event::EventSet;
 pub use self::Colormap::ColormapSet;
 pub use self::Cursor::CursorSet;
 
+pub struct WindowSubAttributeSet {
+    pub back_pixmap_set: BackPixmapSet,
+    pub bit_gravity:     BitGravity,
+    pub win_gravity:     WinGravity,
+    pub backing_store:   BackingStore,
+    pub event_set:       EventSet,
+    pub colormap_set:    ColormapSet,
+    pub cursor_set:      CursorSet
+}
+
+impl WindowSubAttributeSet {
+    pub fn new(back_pixmap_set_: BackPixmapSet,
+               bit_gravity_:     BitGravity,
+               win_gravity_:     WinGravity,
+               backing_store_:   BackingStore,
+               event_set_:       EventSet,
+               colormap_set_:    ColormapSet,
+               cursor_set_:      CursorSet
+              ) -> WindowSubAttributeSet {
+        WindowSubAttributeSet {
+            back_pixmap_set: back_pixmap_set_,
+            bit_gravity:     bit_gravity_,
+            win_gravity:     win_gravity_,
+            backing_store:   backing_store_,
+            event_set:       event_set_,
+            colormap_set:    colormap_set_,
+            cursor_set:      cursor_set_
+        }
+    }
+
+    #[allow(dead_assignment)]
+    pub fn to_array_for_attr(&self, window_attributes: WindowAttributeSet) -> [u32, ..7] {
+        let mut i = 0;
+        let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];
+        if window_attributes.intersects(back_pixmap) {
+            result[i] = self.back_pixmap_set.bits();
+            i += 1;
+        }
+        if window_attributes.intersects(bit_gravity) {
+            result[i] = self.bit_gravity as u32;
+            i += 1;
+        }
+        if window_attributes.intersects(win_gravity) {
+            result[i] = self.win_gravity as u32;
+            i += 1;
+        }
+        if window_attributes.intersects(backing_store) {
+            result[i] = self.backing_store as u32;
+            i += 1;
+        }
+        if window_attributes.intersects(event) {
+            result[i] = self.event_set.bits();
+            i += 1;
+        }
+        if window_attributes.intersects(colormap) {
+            result[i] = self.colormap_set.bits();
+            i += 1;
+        }
+        if window_attributes.intersects(cursor) {
+            result[i] = self.cursor_set.bits();
+            i += 1;
+        }
+        result
+    }
+}
+
 pub type WindowAttributeInt = xcb::xcb_cw_t;
 bitflags!{
     #[deriving(Show)] flags WindowAttributeSet: WindowAttributeInt {
@@ -544,7 +611,7 @@ bitflags!{
         static backing_pixel      = xcb::XCB_CW_BACK_PIXEL,
         static override_reddirect = xcb::XCB_CW_OVERRIDE_REDIRECT,
         static save_under         = xcb::XCB_CW_SAVE_UNDER,
-        static event_mask         = xcb::XCB_CW_EVENT_MASK,
+        static event              = xcb::XCB_CW_EVENT_MASK,
         static dont_propagate     = xcb::XCB_CW_DONT_PROPAGATE,
         static colormap           = xcb::XCB_CW_COLORMAP,
         static cursor             = xcb::XCB_CW_CURSOR

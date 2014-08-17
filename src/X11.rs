@@ -488,11 +488,11 @@ impl Connection {
         Window_Children::make_request(self, window)
     }
 
-    pub fn change_window_attributes<'a>(&'a self, window: Window, value_mask: WindowAttributeSet, values: &[u32]) -> RequestDelay<'a> {
+    pub fn change_window_attributes<'a>(&'a self, window: Window, window_attributes: WindowAttributeSet, window_sub_attributes: &[u32]) -> RequestDelay<'a> {
         let request_delay = RequestDelay::new(self);
         unsafe {
-            let slice: std::raw::Slice<u32> = std::mem::transmute(values);
-            xcb::xcb_change_window_attributes(self.data, window.id(), value_mask.bits(), slice.data);
+            let slice: std::raw::Slice<u32> = std::mem::transmute(window_sub_attributes);
+            xcb::xcb_change_window_attributes(self.data, window.id(), window_attributes.bits(), slice.data);
         }
         request_delay
     }

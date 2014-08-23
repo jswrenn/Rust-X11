@@ -44,21 +44,22 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='../index.html'>X11</a>&#8203;::<a href='index.html'>Window_Attribute</a>&#8203;::<a class='struct' href=''>WindowAttributeSet</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-24811' href='../../src/X11/src/X11.rs.html#647-650'>[src]</a></div></h1>
+        </span><a id='src-24811' href='../../src/X11/src/X11.rs.html#648-651'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct WindowAttributeSet {
     pub main_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowMainAttributeSet.html' title='X11::Window_Attribute::WindowMainAttributeSet'>WindowMainAttributeSet</a>,
     pub sub_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowSubAttributeSet.html' title='X11::Window_Attribute::WindowSubAttributeSet'>WindowSubAttributeSet</a>,
 }</pre><div class='docblock'><p>A <code>struct</code> which can be modeled as an algebraic datatype consisting of a
 unique data constructor for each element of the 15-ary Cartesian product
 of <code>back_pixmap</code> × <code>back_pixel</code> × ... × <code>cursor</code> where <code>back_pixmap</code>,
-<code>back_pixel</code>, ... <code>cursor</code> are modeled as sets each equal to { “on”, “off” }.
-(i.e.
+<code>back_pixel</code>, ... and <code>cursor</code> are modeled as sets each equal to
+{ “on”, “off” }. (i.e.
+ <code>
 data WindowAttributeSet = back_pixmap_on__back_pixel_on__...__cursor_on
                         | back_pixmap_off__back_pixel_on__...__cursor_on
                         | back_pixmap_off__back_pixel_off__...__cursor_on
                         ...
-                        -- Obviously listing 2¹⁵ data constructors is
-                        -- impractical.
+                        -- Obviously listing 2¹⁵ data constructors is impractical.
+</code>
 )
 Indicate the data constructor one intends to use via the <code>main_attributes</code>
 field.

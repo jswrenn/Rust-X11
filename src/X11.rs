@@ -602,8 +602,8 @@ impl WindowSubAttributeSet {
     }
 }
 
-pub type WindowMainAttributeInt = xcb::xcb_cw_t;
 ///A bitmask of 15 flags where the flags are `back_pixmap`, `back_pixel`, ... `cursor`.
+pub type WindowMainAttributeInt = xcb::xcb_cw_t;
 bitflags!{
     #[deriving(Show)] flags WindowMainAttributeSet: WindowMainAttributeInt {
         static back_pixmap        = xcb::XCB_CW_BACK_PIXMAP,
@@ -627,14 +627,15 @@ bitflags!{
 ///A `struct` which can be modeled as an algebraic datatype consisting of a
 ///unique data constructor for each element of the 15-ary Cartesian product
 ///of `back_pixmap` × `back_pixel` × ... × `cursor` where `back_pixmap`,
-///`back_pixel`, ... `cursor` are modeled as sets each equal to { “on”, “off” }.
-///(i.e.
+///`back_pixel`, ... and `cursor` are modeled as sets each equal to
+///{ “on”, “off” }. (i.e.
+/// ```
 ///data WindowAttributeSet = back_pixmap_on__back_pixel_on__...__cursor_on
 ///                        | back_pixmap_off__back_pixel_on__...__cursor_on
 ///                        | back_pixmap_off__back_pixel_off__...__cursor_on
 ///                        ...
-///                        -- Obviously listing 2¹⁵ data constructors is
-///                        -- impractical.
+///                        -- Obviously listing 2¹⁵ data constructors is impractical.
+/// ```
 ///)
 ///Indicate the data constructor one intends to use via the `main_attributes`
 ///field.

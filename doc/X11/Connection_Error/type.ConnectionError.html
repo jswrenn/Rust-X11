@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Enum <a href='../index.html'>X11</a>&#8203;::<a href='index.html'>Connection_Error</a>&#8203;::<a class='type' href=''>ConnectionError</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-19742' href='../../src/X11/src/X11.rs.html#34-56'>[src]</a></div></h1>
+        </span><a id='src-19751' href='../../src/X11/src/X11.rs.html#42-64'>[src]</a></div></h1>
 <pre class='rust enum'>pub enum ConnectionError {
     Generic,
     ExtNotSupported,
@@ -53,9 +53,7 @@
     ParseErr,
     InvalidScreen,
     FDPassingFailure,
-}</pre><div class='docblock'><p>This enum should represent a one-to-one mapping of the return values &gt; 0 of
-xcb_connection_has_error.</p>
-</div><h2 class='variants'>Variants</h2>
+}</pre><h2 class='variants'>Variants</h2>
 <table><tr><td id='variant.Generic'><a class='stability Unmarked' title='No stability level'></a><code>Generic</code></td><td><div class='docblock'><p>Socket error, pipe error, or other stream error</p>
 </div></td></tr><tr><td id='variant.ExtNotSupported'><a class='stability Unmarked' title='No stability level'></a><code>ExtNotSupported</code></td><td><div class='docblock'><p>Extension not supported</p>
 </div></td></tr><tr><td id='variant.MemInsufficient'><a class='stability Unmarked' title='No stability level'></a><code>MemInsufficient</code></td><td><div class='docblock'><p>Memory not available</p>

@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Module <a href='../index.html'>X11</a>&#8203;::<a class='mod' href=''>Window_Attribute</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-23506' href='../../src/X11/src/X11.rs.html#526-770'>[src]</a></div></h1>
+        </span><a id='src-23506' href='../../src/X11/src/X11.rs.html#526-791'>[src]</a></div></h1>
 <h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use self::<a class='mod'
                                             href='./Back_Pixmap/index.html'>Back_Pixmap</a>::<a class='struct' href='../../X11/Window_Attribute/Back_Pixmap/struct.BackPixmapSet.html' title='X11::Window_Attribute::Back_Pixmap::BackPixmapSet'>BackPixmapSet</a>;</code></td></tr><tr><td><code>pub use self::<a class='mod'
@@ -101,7 +101,26 @@
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.WindowAttributeSet.html'
                                title='X11::Window_Attribute::WindowAttributeSet'>WindowAttributeSet</a></td>
-                        <td class='docblock short'></td>
+                        <td class='docblock short'><p>A <code>struct</code> which can be modeled as an algebraic datatype consisting of a
+unique data constructor for each element of the 15-ary Cartesian product
+of <code>back_pixmap</code> × <code>back_pixel</code> × ... × <code>cursor</code> where <code>back_pixmap</code>,
+<code>back_pixel</code>, ... <code>cursor</code> are modeled as sets each equal to { “on”, “off” }.
+(i.e.
+data WindowAttributeSet = back_pixmap_on__back_pixel_on__...__cursor_on
+                        | back_pixmap_off__back_pixel_on__...__cursor_on
+                        | back_pixmap_off__back_pixel_off__...__cursor_on
+                        ...
+                        -- Obviously listing 2¹⁵ data constructors is
+                        -- impractical.
+)
+Indicate the data constructor one intends to use via the <code>main_attributes</code>
+field.
+Additionally, some of the data constructors (specifically the ones indicating
+that <code>back_pixmap</code>, <code>bit_gravity</code>, <code>win_gravity</code>, <code>backing_store</code>, <code>event</code>,
+<code>colormap</code>, or <code>cursor</code> are “on”) take arguments.
+Indicate the arguments to the data constructor one intends to use via the
+<code>sub_attributes</code> field.</p>
+</td>
                     </tr>
                 
                     <tr>
@@ -113,7 +132,8 @@
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.WindowSubAttributeSet.html'
                                title='X11::Window_Attribute::WindowSubAttributeSet'>WindowSubAttributeSet</a></td>
-                        <td class='docblock short'></td>
+                        <td class='docblock short'><p>See documentation for WindowAttributeSet.</p>
+</td>
                     </tr>
                 </table><h2 id='statics' class='section-header'><a href="#statics">Statics</a></h2>
 <table>

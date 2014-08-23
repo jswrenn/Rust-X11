@@ -44,11 +44,30 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='../index.html'>X11</a>&#8203;::<a href='index.html'>Window_Attribute</a>&#8203;::<a class='struct' href=''>WindowAttributeSet</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-24811' href='../../src/X11/src/X11.rs.html#626-629'>[src]</a></div></h1>
+        </span><a id='src-24811' href='../../src/X11/src/X11.rs.html#647-650'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct WindowAttributeSet {
     pub main_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowMainAttributeSet.html' title='X11::Window_Attribute::WindowMainAttributeSet'>WindowMainAttributeSet</a>,
     pub sub_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowSubAttributeSet.html' title='X11::Window_Attribute::WindowSubAttributeSet'>WindowSubAttributeSet</a>,
-}</pre><h2 class='fields'>Fields</h2>
+}</pre><div class='docblock'><p>A <code>struct</code> which can be modeled as an algebraic datatype consisting of a
+unique data constructor for each element of the 15-ary Cartesian product
+of <code>back_pixmap</code> × <code>back_pixel</code> × ... × <code>cursor</code> where <code>back_pixmap</code>,
+<code>back_pixel</code>, ... <code>cursor</code> are modeled as sets each equal to { “on”, “off” }.
+(i.e.
+data WindowAttributeSet = back_pixmap_on__back_pixel_on__...__cursor_on
+                        | back_pixmap_off__back_pixel_on__...__cursor_on
+                        | back_pixmap_off__back_pixel_off__...__cursor_on
+                        ...
+                        -- Obviously listing 2¹⁵ data constructors is
+                        -- impractical.
+)
+Indicate the data constructor one intends to use via the <code>main_attributes</code>
+field.
+Additionally, some of the data constructors (specifically the ones indicating
+that <code>back_pixmap</code>, <code>bit_gravity</code>, <code>win_gravity</code>, <code>backing_store</code>, <code>event</code>,
+<code>colormap</code>, or <code>cursor</code> are “on”) take arguments.
+Indicate the arguments to the data constructor one intends to use via the
+<code>sub_attributes</code> field.</p>
+</div><h2 class='fields'>Fields</h2>
 <table><tr><td id='structfield.main_attributes'><a class='stability Unmarked' title='No stability level'></a><code>main_attributes</code></td><td></td></tr><tr><td id='structfield.sub_attributes'><a class='stability Unmarked' title='No stability level'></a><code>sub_attributes</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../../X11/Window_Attribute/struct.WindowAttributeSet.html' title='X11::Window_Attribute::WindowAttributeSet'>WindowAttributeSet</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(main_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowMainAttributeSet.html' title='X11::Window_Attribute::WindowMainAttributeSet'>WindowMainAttributeSet</a>, sub_attributes: <a class='struct' href='../../X11/Window_Attribute/struct.WindowSubAttributeSet.html' title='X11::Window_Attribute::WindowSubAttributeSet'>WindowSubAttributeSet</a>) -&gt; <a class='struct' href='../../X11/Window_Attribute/struct.WindowAttributeSet.html' title='X11::Window_Attribute::WindowAttributeSet'>WindowAttributeSet</a></code></h4>
 <h4 id='method.main_attributes' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.main_attributes' class='fnname'>main_attributes</a>(&amp;self) -&gt; <a class='struct' href='../../X11/Window_Attribute/struct.WindowMainAttributeSet.html' title='X11::Window_Attribute::WindowMainAttributeSet'>WindowMainAttributeSet</a></code></h4>
 <h4 id='method.sub_attributes' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.sub_attributes' class='fnname'>sub_attributes</a>(&amp;self) -&gt; <a class='struct' href='../../X11/Window_Attribute/struct.WindowSubAttributeSet.html' title='X11::Window_Attribute::WindowSubAttributeSet'>WindowSubAttributeSet</a></code></h4>

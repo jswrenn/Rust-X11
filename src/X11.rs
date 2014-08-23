@@ -499,6 +499,28 @@ impl Connection {
         }
         request_delay
     }
+
+    pub fn grab_key_chord<'a>(&'a self,
+                              pointer_event_mode: Input::PointerEventMode,
+                              grab_window: Window,
+                              modifiers: Input::ModkeySet,
+                              keycode: Input::Keycode,
+                              pointer_mode: Input::PointerMode,
+                              keyboard_mode: Input::KeyboardMode
+                             ) -> RequestDelay<'a> {
+        let request_delay = RequestDelay::new(self);
+        unsafe {
+            xcb::xcb_grab_key(self.data,
+                              pointer_event_mode as Input::Pointer_Event_Mode::PointerEventModeInt,
+                              grab_window.id(),
+                              modifiers.bits(),
+                              keycode.data(),
+                              pointer_mode as Input::Pointer_Mode::PointerModeInt,
+                              keyboard_mode as Input::Keyboard_Mode::KeyboardModeInt
+                             );
+        }
+        request_delay
+    }
 }
 
 impl Drop for Connection {
@@ -786,6 +808,77 @@ pub mod Cursor {
         #[deriving(Show)] flags CursorSet: CursorInt {
             static none = xcb::XCB_CURSOR_NONE
         }
+    }
+}
+
+}
+
+pub mod Input {
+    pub use self::Modkey::ModkeySet;
+    pub use self::Pointer_Mode::PointerMode;
+    pub use self::Keyboard_Mode::KeyboardMode;
+    pub use self::Pointer_Event_Mode::PointerEventMode;
+    use xcb;
+
+pub mod Modkey {
+    use xcb;
+    pub type ModkeyInt = u16;
+    bitflags!{
+        #[deriving(Show)] flags ModkeySet: ModkeyInt {
+            static shift     = xcb::XCB_MOD_MASK_SHIFT as ModkeyInt,
+            static caps_lock = xcb::XCB_MOD_MASK_LOCK as ModkeyInt,
+            static control   = xcb::XCB_MOD_MASK_CONTROL as ModkeyInt,
+            static mod_1     = xcb::XCB_MOD_MASK_1 as ModkeyInt,
+            static mod_2     = xcb::XCB_MOD_MASK_2 as ModkeyInt,
+            static mod_3     = xcb::XCB_MOD_MASK_3 as ModkeyInt,
+            static mod_4     = xcb::XCB_MOD_MASK_4 as ModkeyInt,
+            static mod_5     = xcb::XCB_MOD_MASK_5 as ModkeyInt,
+            static any       = xcb::XCB_MOD_MASK_ANY as ModkeyInt
+        }
+}
+
+}
+
+pub type KeycodeInt = xcb::xcb_keycode_t;
+#[deriving(Show)]
+pub struct Keycode {
+    data: KeycodeInt
+}
+
+impl Keycode {
+    #[inline]
+    pub fn data(&self) -> KeycodeInt { self.data }
+}
+
+pub mod Pointer_Mode {
+    use xcb;
+    pub type PointerModeInt = u8;
+    #[deriving(Show)]
+    #[repr(u8)]
+    pub enum PointerMode {
+        Sync  = xcb::XCB_GRAB_MODE_SYNC as u8,
+        Async = xcb::XCB_GRAB_MODE_ASYNC as u8
+    }
+}
+
+pub mod Keyboard_Mode {
+    use xcb;
+    pub type KeyboardModeInt = u8;
+    #[deriving(Show)]
+    #[repr(u8)]
+    pub enum KeyboardMode {
+        Sync  = xcb::XCB_GRAB_MODE_SYNC as u8,
+        Async = xcb::XCB_GRAB_MODE_ASYNC as u8
+    }
+}
+
+pub mod Pointer_Event_Mode {
+    pub type PointerEventModeInt = u8;
+    #[deriving(Show)]
+    #[repr(u8)]
+    pub enum PointerEventMode {
+        SendOnlyToGrabbed = 0,
+        SendAlsoToPointed = 1
     }
 }
 

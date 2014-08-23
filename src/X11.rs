@@ -533,6 +533,7 @@ pub use self::Event::EventSet;
 pub use self::Colormap::ColormapSet;
 pub use self::Cursor::CursorSet;
 
+///See documentation for WindowAttributeSet.
 #[deriving(Show)]
 pub struct WindowSubAttributeSet {
     pub back_pixmap_set: BackPixmapSet,
@@ -602,6 +603,7 @@ impl WindowSubAttributeSet {
 }
 
 pub type WindowMainAttributeInt = xcb::xcb_cw_t;
+///A bitmask of 15 flags where the flags are `back_pixmap`, `back_pixel`, ... `cursor`.
 bitflags!{
     #[deriving(Show)] flags WindowMainAttributeSet: WindowMainAttributeInt {
         static back_pixmap        = xcb::XCB_CW_BACK_PIXMAP,
@@ -622,6 +624,25 @@ bitflags!{
     }
 }
 
+///A `struct` which can be modeled as an algebraic datatype consisting of a
+///unique data constructor for each element of the 15-ary Cartesian product
+///of `back_pixmap` × `back_pixel` × ... × `cursor` where `back_pixmap`,
+///`back_pixel`, ... `cursor` are modeled as sets each equal to { “on”, “off” }.
+///(i.e.
+///data WindowAttributeSet = back_pixmap_on__back_pixel_on__...__cursor_on
+///                        | back_pixmap_off__back_pixel_on__...__cursor_on
+///                        | back_pixmap_off__back_pixel_off__...__cursor_on
+///                        ...
+///                        -- Obviously listing 2¹⁵ data constructors is
+///                        -- impractical.
+///)
+///Indicate the data constructor one intends to use via the `main_attributes`
+///field.
+///Additionally, some of the data constructors (specifically the ones indicating
+///that `back_pixmap`, `bit_gravity`, `win_gravity`, `backing_store`, `event`,
+///`colormap`, or `cursor` are “on”) take arguments.
+///Indicate the arguments to the data constructor one intends to use via the
+///`sub_attributes` field.
 #[deriving(Show)]
 pub struct WindowAttributeSet {
     pub main_attributes: WindowMainAttributeSet,

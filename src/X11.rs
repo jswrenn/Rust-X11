@@ -15,6 +15,14 @@ pub use Window_Attribute::WindowAttributeSet;
 
 mod xcb;
 
+macro_rules! assert_type_eq(
+    ($T1:ty, $T2:ty) => ( assert_type_eq!($T1, $T2, id) );
+    ($T1:ty, $T2:ty, $ID:ident) => (
+        #[allow(dead_code)]
+        fn $ID(x: $T1) -> $T2 { x }
+        );
+)
+
 ///Represents a connection to an X server.
 ///Will automatically disconnect from the X server at end of object lifetime.
 ///Guaranteed to be a valid connection upon successful construction **but not after**.
@@ -24,11 +32,11 @@ pub struct Connection {
 }
 
 pub mod Connection_Error {
-//FIXME repr() won't take c_int, so find a way to make sure i32 = c_int.
 ///This enum should represent a one-to-one mapping of the return values > 0 of
 ///xcb_connection_has_error.
 //This enum should have identical size to an int in C to make it safe to cast
 //the return value of xcb_connection_has_error into this enum.
+assert_type_eq!(super::libc::c_int, i32)
 #[repr(i32)]
 #[deriving(Show, PartialEq, Eq, Rand)]
 pub enum ConnectionError {
@@ -703,8 +711,7 @@ pub mod Back_Pixmap {
 pub mod Bit_Gravity {
     use xcb;
     pub type BitGravityInt = xcb::xcb_gravity_t;
-    //FIXME Make certain BitGravityInt = u32 = xcb::xcb_gravity_t.
-    //(repr won't take BitGravityInt.)
+    assert_type_eq!(BitGravityInt, u32)
     #[repr(u32)]
     #[deriving(Show)]
     pub enum BitGravity {
@@ -724,8 +731,7 @@ pub mod Bit_Gravity {
 pub mod Win_Gravity {
     use xcb;
     pub type WinGravityInt = xcb::xcb_gravity_t;
-    //FIXME Make certain WinGravityInt = u32 = xcb::xcb_gravity_t.
-    //(repr won't take WinGravityInt.)
+    assert_type_eq!(WinGravityInt, u32)
     #[repr(u32)]
     #[deriving(Show)]
     pub enum WinGravity {
@@ -745,8 +751,7 @@ pub mod Win_Gravity {
 pub mod Backing_Store {
     use xcb;
     pub type BackingStoreInt = xcb::xcb_backing_store_t;
-    //FIXME Make certain BackingStoreInt = u32 = xcb::xcb_backing_store_t.
-    //(repr won't take BackingStoreInt)
+    assert_type_eq!(BackingStoreInt, u32)
     #[repr(u32)]
     #[deriving(Show)]
     pub enum BackingStore {

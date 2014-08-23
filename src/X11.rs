@@ -9,8 +9,9 @@ pub use Connection_Status::ConnectionStatus;
 pub use Screen_Setup::ScreenSetup;
 pub use Window_Geometry::WindowGeometry;
 pub use Window_Children::WindowChildren;
-pub use Window_Attribute::WindowAttributeSet;
+pub use Window_Attribute::WindowMainAttributeSet;
 pub use Window_Attribute::WindowSubAttributeSet;
+pub use Window_Attribute::WindowAttributeSet;
 
 mod xcb;
 
@@ -489,11 +490,12 @@ impl Connection {
         Window_Children::make_request(self, window)
     }
 
-    pub fn change_window_attributes<'a>(&'a self, window: Window, window_attributes: WindowAttributeSet, window_sub_attributes: WindowSubAttributeSet) -> RequestDelay<'a> {
+    pub fn change_window_attributes<'a>(&'a self, window: Window, new_attributes: WindowAttributeSet) -> RequestDelay<'a> {
         let request_delay = RequestDelay::new(self);
-        let sub_attributes = window_sub_attributes.to_array_for_attr(window_attributes);
+        let main_attributes = new_attributes.main_attributes().bits();
+        let sub_attributes = new_attributes.sub_attribute_array();
         unsafe {
-            xcb::xcb_change_window_attributes(self.data, window.id(), window_attributes.bits(), std::mem::transmute(&sub_attributes));
+            xcb::xcb_change_window_attributes(self.data, window.id(), main_attributes, std::mem::transmute(&sub_attributes));
         }
         request_delay
     }
@@ -531,6 +533,7 @@ pub use self::Event::EventSet;
 pub use self::Colormap::ColormapSet;
 pub use self::Cursor::CursorSet;
 
+#[deriving(Show)]
 pub struct WindowSubAttributeSet {
     pub back_pixmap_set: BackPixmapSet,
     pub bit_gravity:     BitGravity,
@@ -542,6 +545,7 @@ pub struct WindowSubAttributeSet {
 }
 
 impl WindowSubAttributeSet {
+    #[inline]
     pub fn new(back_pixmap_set_: BackPixmapSet,
                bit_gravity_:     BitGravity,
                win_gravity_:     WinGravity,
@@ -562,7 +566,7 @@ impl WindowSubAttributeSet {
     }
 
     #[allow(dead_assignment)]
-    pub fn to_array_for_attr(&self, window_attributes: WindowAttributeSet) -> [u32, ..7] {
+    pub fn to_array_for_attr(&self, window_attributes: WindowMainAttributeSet) -> [u32, ..7] {
         let mut i = 0;
         let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];
         if window_attributes.intersects(back_pixmap) {
@@ -597,9 +601,9 @@ impl WindowSubAttributeSet {
     }
 }
 
-pub type WindowAttributeInt = xcb::xcb_cw_t;
+pub type WindowMainAttributeInt = xcb::xcb_cw_t;
 bitflags!{
-    #[deriving(Show)] flags WindowAttributeSet: WindowAttributeInt {
+    #[deriving(Show)] flags WindowMainAttributeSet: WindowMainAttributeInt {
         static back_pixmap        = xcb::XCB_CW_BACK_PIXMAP,
         static back_pixel         = xcb::XCB_CW_BACKING_PIXEL,
         static border_pixmap      = xcb::XCB_CW_BORDER_PIXMAP,
@@ -615,6 +619,29 @@ bitflags!{
         static dont_propagate     = xcb::XCB_CW_DONT_PROPAGATE,
         static colormap           = xcb::XCB_CW_COLORMAP,
         static cursor             = xcb::XCB_CW_CURSOR
+    }
+}
+
+#[deriving(Show)]
+pub struct WindowAttributeSet {
+    pub main_attributes: WindowMainAttributeSet,
+    pub sub_attributes: WindowSubAttributeSet
+}
+
+impl WindowAttributeSet {
+    #[inline]
+    pub fn new(main_attributes: WindowMainAttributeSet,
+               sub_attributes: WindowSubAttributeSet
+              ) -> WindowAttributeSet {
+        WindowAttributeSet { main_attributes: main_attributes, sub_attributes: sub_attributes }
+    }
+    #[inline]
+    pub fn main_attributes(&self) -> WindowMainAttributeSet { self.main_attributes }
+    #[inline]
+    pub fn sub_attributes(&self) -> WindowSubAttributeSet { self.sub_attributes }
+    #[inline]
+    pub fn sub_attribute_array(&self) -> [u32, ..7] {
+        self.sub_attributes.to_array_for_attr(self.main_attributes)
     }
 }
 

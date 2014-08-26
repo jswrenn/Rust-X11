@@ -831,7 +831,7 @@ pub mod Modkey {
     bitflags!{
         #[deriving(Show)] flags ModkeySet: ModkeyInt {
             static shift     = xcb::XCB_MOD_MASK_SHIFT as ModkeyInt,
-            static caps_lock = xcb::XCB_MOD_MASK_LOCK as ModkeyInt,
+            static lock      = xcb::XCB_MOD_MASK_LOCK as ModkeyInt,
             static control   = xcb::XCB_MOD_MASK_CONTROL as ModkeyInt,
             static mod_1     = xcb::XCB_MOD_MASK_1 as ModkeyInt,
             static mod_2     = xcb::XCB_MOD_MASK_2 as ModkeyInt,

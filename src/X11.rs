@@ -601,7 +601,7 @@ impl WindowSubAttributeSet {
         let mut i = 0;
         let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];
         if window_attributes.intersects(background_pixmap) {
-            result[i] = self.background_pixmap.into_u32();
+            result[i] = self.background_pixmap.as_u32();
             i += 1;
         }
         if window_attributes.intersects(bit_gravity) {
@@ -717,7 +717,7 @@ pub mod Background_Pixmap {
         #[inline]
         pub fn is_pixmap(&self) -> bool { (*self != self::none) && (*self != self::parent_relative) }
         #[inline]
-        pub fn into_u32(&self) -> u32 { self.data }
+        pub fn as_u32(&self) -> u32 { self.data }
     }
 
     impl std::default::Default for BackgroundPixmap {
@@ -744,7 +744,7 @@ pub mod Border_Pixmap {
         #[inline]
         pub fn is_pixmap(&self) -> bool { *self != self::copy_from_parent }
         #[inline]
-        pub fn into_u32(&self) -> u32 { self.data }
+        pub fn as_u32(&self) -> u32 { self.data }
     }
 
     impl std::default::Default for BorderPixmap {

@@ -555,7 +555,7 @@ pub struct RectangularSize {
 
 pub mod Window_Attribute {
 use xcb;
-pub use self::Back_Pixmap::BackPixmapSet;
+pub use self::Background_Pixmap::BackgroundPixmap;
 pub use self::Bit_Gravity::BitGravity;
 pub use self::Win_Gravity::WinGravity;
 pub use self::Backing_Store::BackingStore;
@@ -566,27 +566,27 @@ pub use self::Cursor::CursorSet;
 ///See documentation for WindowAttributeSet.
 #[deriving(Show)]
 pub struct WindowSubAttributeSet {
-    pub back_pixmap_set: BackPixmapSet,
-    pub bit_gravity:     BitGravity,
-    pub win_gravity:     WinGravity,
-    pub backing_store:   BackingStore,
-    pub event_set:       EventSet,
-    pub colormap_set:    ColormapSet,
-    pub cursor_set:      CursorSet
+    pub background_pixmap: BackgroundPixmap,
+    pub bit_gravity:       BitGravity,
+    pub win_gravity:       WinGravity,
+    pub backing_store:     BackingStore,
+    pub event_set:         EventSet,
+    pub colormap_set:      ColormapSet,
+    pub cursor_set:        CursorSet
 }
 
 impl WindowSubAttributeSet {
     #[inline]
-    pub fn new(back_pixmap_set_: BackPixmapSet,
-               bit_gravity_:     BitGravity,
-               win_gravity_:     WinGravity,
-               backing_store_:   BackingStore,
-               event_set_:       EventSet,
-               colormap_set_:    ColormapSet,
-               cursor_set_:      CursorSet
+    pub fn new(background_pixmap_: BackgroundPixmap,
+               bit_gravity_:       BitGravity,
+               win_gravity_:       WinGravity,
+               backing_store_:     BackingStore,
+               event_set_:         EventSet,
+               colormap_set_:      ColormapSet,
+               cursor_set_:        CursorSet
               ) -> WindowSubAttributeSet {
         WindowSubAttributeSet {
-            back_pixmap_set: back_pixmap_set_,
+            background_pixmap: background_pixmap_,
             bit_gravity:     bit_gravity_,
             win_gravity:     win_gravity_,
             backing_store:   backing_store_,
@@ -600,8 +600,8 @@ impl WindowSubAttributeSet {
     pub fn to_array_for_attr(&self, window_attributes: WindowMainAttributeSet) -> [u32, ..7] {
         let mut i = 0;
         let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];
-        if window_attributes.intersects(back_pixmap) {
-            result[i] = self.back_pixmap_set.bits();
+        if window_attributes.intersects(background_pixmap) {
+            result[i] = self.background_pixmap.into_u32();
             i += 1;
         }
         if window_attributes.intersects(bit_gravity) {
@@ -636,15 +636,15 @@ impl WindowSubAttributeSet {
 pub type WindowMainAttributeInt = xcb::xcb_cw_t;
 bitflags!{
     #[deriving(Show)] flags WindowMainAttributeSet: WindowMainAttributeInt {
-        static back_pixmap        = xcb::XCB_CW_BACK_PIXMAP,
-        static back_pixel         = xcb::XCB_CW_BACKING_PIXEL,
+        static background_pixmap  = xcb::XCB_CW_BACK_PIXMAP,
+        static background_pixel   = xcb::XCB_CW_BACK_PIXEL,
         static border_pixmap      = xcb::XCB_CW_BORDER_PIXMAP,
         static border_pixel       = xcb::XCB_CW_BORDER_PIXEL,
         static bit_gravity        = xcb::XCB_CW_BIT_GRAVITY,
         static win_gravity        = xcb::XCB_CW_WIN_GRAVITY,
         static backing_store      = xcb::XCB_CW_BACKING_STORE,
         static backing_planes     = xcb::XCB_CW_BACKING_PLANES,
-        static backing_pixel      = xcb::XCB_CW_BACK_PIXEL,
+        static backing_pixel      = xcb::XCB_CW_BACKING_PIXEL,
         static override_reddirect = xcb::XCB_CW_OVERRIDE_REDIRECT,
         static save_under         = xcb::XCB_CW_SAVE_UNDER,
         static event              = xcb::XCB_CW_EVENT_MASK,
@@ -697,15 +697,61 @@ impl WindowAttributeSet {
     }
 }
 
-pub mod Back_Pixmap {
+pub mod Background_Pixmap {
+    use std;
     use xcb;
-    pub type BackPixmapInt = xcb::xcb_back_pixmap_t;
-    bitflags!{
-        #[deriving(Show)] flags BackPixmapSet: BackPixmapInt {
-            static none            = xcb::XCB_BACK_PIXMAP_NONE,
-            static parent_relative = xcb::XCB_BACK_PIXMAP_PARENT_RELATIVE
-        }
+
+    #[deriving(Show, PartialEq, Eq)]
+    pub struct BackgroundPixmap {
+        data: u32
     }
+
+    static none: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_NONE };
+    static parent_relative: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_PARENT_RELATIVE };
+
+    impl BackgroundPixmap {
+        #[inline]
+        pub fn new(n: u32) -> BackgroundPixmap {
+            BackgroundPixmap { data: n }
+        }
+        #[inline]
+        pub fn is_pixmap(&self) -> bool { (*self != self::none) && (*self != self::parent_relative) }
+        #[inline]
+        pub fn into_u32(&self) -> u32 { self.data }
+    }
+
+    impl std::default::Default for BackgroundPixmap {
+        #[inline]
+        fn default() -> BackgroundPixmap { self::none }
+    }
+
+}
+
+pub mod Border_Pixmap {
+    use std;
+    use xcb;
+
+    #[deriving(Show, PartialEq, Eq)]
+    pub struct BorderPixmap {
+        data: u32
+    }
+
+    static copy_from_parent: BorderPixmap = BorderPixmap { data: xcb::XCB_COPY_FROM_PARENT };
+
+    impl BorderPixmap {
+        #[inline]
+        pub fn new(n: u32) -> BorderPixmap { BorderPixmap { data: n } }
+        #[inline]
+        pub fn is_pixmap(&self) -> bool { *self != self::copy_from_parent }
+        #[inline]
+        pub fn into_u32(&self) -> u32 { self.data }
+    }
+
+    impl std::default::Default for BorderPixmap {
+        #[inline]
+        fn default() -> BorderPixmap { self::copy_from_parent }
+    }
+
 }
 
 pub mod Bit_Gravity {

@@ -4,8 +4,10 @@
 #![allow(raw_pointer_deriving)]
 #[phase(plugin, link)] extern crate log;
 extern crate libc;
+extern crate serialize;
 pub use connection_error::ConnectionError;
 pub use connection_status::ConnectionStatus;
+pub use window::Window;
 pub use screen_setup::ScreenSetup;
 pub use window_geometry::WindowGeometry;
 pub use window_children::WindowChildren;
@@ -21,6 +23,46 @@ macro_rules! assert_type_eq(
         #[allow(dead_code)]
         fn $ID(x: $T1) -> $T2 { x }
         );
+)
+
+macro_rules! refined_type(
+    ($(#[$ATTRIBUTES:meta])*
+     refined $A:ident = $B:ident where
+         |$ID:ident:$C:ty| -> $($PROPERTIES:ident <=> $PREDICATES:expr),+) => (
+             $(#[$ATTRIBUTES])*
+             pub struct $A {
+                 data: $B
+             }
+
+             impl $A {
+                 $(pub fn $PROPERTIES($ID: $C) -> bool { $PREDICATES } )+
+                 pub fn invariant($ID: $C) -> bool {
+                     and_all!($($PREDICATES)+)
+                 }
+                 pub unsafe fn assume(data: $B) -> $A {
+                     let val = $A { data: data };
+                     debug_assert!($A::invariant(val));
+                     val
+                 }
+                 pub fn new(data: $B) -> Option<$A> {
+                     let val = $A { data: data };
+                     if $A::invariant(val) {
+                         None
+                     }
+                     else {
+                         Some(val)
+                     }
+                 }
+
+                 #[inline]
+                 pub fn raw(&self) -> $B { self.data }
+             }
+    );
+)
+
+macro_rules! and_all(
+    ($X:expr) => ($X);
+    ($X:expr $($XS:expr)+) => ( ($X) && ($(and_all!($XS))+));
 )
 
 ///Represents a connection to an X server.
@@ -91,22 +133,25 @@ pub struct Screen {
     data: xcb::xcb_screen_t
 }
 
-//This is like a Haskell newtype.
-//Adding/removing/changing fields invalidates code which transmutes between the underlying type
-//and the struct.
-#[deriving(Show)]
-pub struct Window {
-    data: xcb::xcb_window_t
-}
-
-impl Window {
-    pub fn id(&self) -> u32 { self.data }
-}
-
 impl Screen {
+    #[inline]
     pub fn root_window(&self) -> Window {
-        Window { data: self.data.root }
+        //FIXME Is this assumption justified?
+        unsafe { Window::assume(self.data.root) }
     }
+}
+
+pub mod window {
+    use xcb;
+
+    pub type WindowInt = xcb::xcb_window_t;
+
+    refined_type!{
+        #[deriving(Show, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable, Rand)]
+        refined Window = WindowInt where |w: Window| ->
+            non_null <=> w.data != xcb::XCB_WINDOW_NONE
+    }
+
 }
 
 pub struct RequestError {
@@ -263,7 +308,7 @@ pub mod window_geometry {
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_get_geometry(connection.data, window.id()) },
+            data: unsafe { xcb::xcb_get_geometry(connection.data, window.raw()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -342,7 +387,7 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_query_tree(connection.data, window.id()) },
+            data: unsafe { xcb::xcb_query_tree(connection.data, window.raw()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -503,7 +548,7 @@ impl Connection {
         let main_attributes = new_attributes.main_attributes().bits();
         let sub_attributes = new_attributes.sub_attribute_array();
         unsafe {
-            xcb::xcb_change_window_attributes(self.data, window.id(), main_attributes, std::mem::transmute(&sub_attributes));
+            xcb::xcb_change_window_attributes(self.data, window.raw(), main_attributes, std::mem::transmute(&sub_attributes));
         }
         request_delay
     }
@@ -520,7 +565,7 @@ impl Connection {
         unsafe {
             xcb::xcb_grab_key(self.data,
                               pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
-                              grab_window.id(),
+                              grab_window.raw(),
                               modifiers.bits(),
                               keycode.data(),
                               pointer_mode as input::pointer_mode::PointerModeInt,

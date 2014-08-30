@@ -4,14 +4,14 @@
 #![allow(raw_pointer_deriving)]
 #[phase(plugin, link)] extern crate log;
 extern crate libc;
-pub use Connection_Error::ConnectionError;
-pub use Connection_Status::ConnectionStatus;
-pub use Screen_Setup::ScreenSetup;
-pub use Window_Geometry::WindowGeometry;
-pub use Window_Children::WindowChildren;
-pub use Window_Attribute::WindowMainAttributeSet;
-pub use Window_Attribute::WindowSubAttributeSet;
-pub use Window_Attribute::WindowAttributeSet;
+pub use connection_error::ConnectionError;
+pub use connection_status::ConnectionStatus;
+pub use screen_setup::ScreenSetup;
+pub use window_geometry::WindowGeometry;
+pub use window_children::WindowChildren;
+pub use window_attribute::WindowMainAttributeSet;
+pub use window_attribute::WindowSubAttributeSet;
+pub use window_attribute::WindowAttributeSet;
 
 mod xcb;
 
@@ -31,7 +31,7 @@ pub struct Connection {
     data: *mut xcb::xcb_connection_t
 }
 
-pub mod Connection_Error {
+pub mod connection_error {
 ///This enum should represent a one-to-one mapping of the return values > 0 of
 ///xcb_connection_has_error.
 //This enum should have identical size to an int in C to make it safe to cast
@@ -64,7 +64,7 @@ pub enum ConnectionError {
 }
 }
 
-pub mod Connection_Status {
+pub mod connection_status {
 pub enum ConnectionStatus {
     Valid,
     Invalid(::ConnectionError)
@@ -119,7 +119,7 @@ impl Drop for RequestError {
     }
 }
 
-pub mod Screen_Setup {
+pub mod screen_setup {
 use super::{std, xcb, Setup, Screen};
 
 pub struct ScreenSetup<'a> {
@@ -252,7 +252,7 @@ impl<'a> Drop for RequestDelay<'a> {
     }
 }
 
-pub mod Window_Geometry {
+pub mod window_geometry {
     use super::{Connection, Window, RequestError, RequestDelay, Coordinate, RectangularSize, xcb, std, libc};
 
     #[deriving(Show)]
@@ -331,7 +331,7 @@ pub mod Window_Geometry {
     impl super::Reply for Reply {}
 }
 
-pub mod Window_Children {
+pub mod window_children {
 use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     #[deriving(Show)]
@@ -431,11 +431,11 @@ impl Connection {
         debug_assert!(!possible_connection_ptr.is_null(), "Null pointer returned by call to xcb_connect. This should be impossible.")
         let possible_connection = Connection { data: unsafe { &mut *possible_connection_ptr } };
         match possible_connection.status() {
-            Connection_Status::Valid => {
+            connection_status::Valid => {
                 debug!("Connected to X server.")
                 Ok(possible_connection)
             }
-            Connection_Status::Invalid(error) => {
+            connection_status::Invalid(error) => {
                 debug!("Unable to connect to X server.")
                 Err(error)
             }
@@ -458,10 +458,10 @@ impl Connection {
     pub fn status(&self) -> ConnectionStatus {
         let connection_status = unsafe { xcb::xcb_connection_has_error(self.data) };
         match connection_status {
-            0 => Connection_Status::Valid,
+            0 => connection_status::Valid,
             n => {
-                debug_assert!(n >= Connection_Error::Generic as libc::c_int && n <= Connection_Error::FDPassingFailure as libc::c_int, "A call to xcb_connection_has_error returned a value outside the expected range.")
-                Connection_Status::Invalid(unsafe { std::mem::transmute(n) })
+                debug_assert!(n >= connection_error::Generic as libc::c_int && n <= connection_error::FDPassingFailure as libc::c_int, "A call to xcb_connection_has_error returned a value outside the expected range.")
+                connection_status::Invalid(unsafe { std::mem::transmute(n) })
             }
         }
     }
@@ -469,7 +469,7 @@ impl Connection {
     ///Test if connected to the X server.
     pub fn is_valid(&self) -> bool {
         match self.status() {
-            Connection_Status::Valid => true,
+            connection_status::Valid => true,
             _                        => false
         }
     }
@@ -489,13 +489,13 @@ impl Connection {
     }
      
     #[inline]
-    pub fn make_window_geometry_request<'a>(&'a self, window: Window) -> (Window_Geometry::Cookie<'a>, RequestDelay<'a>) {
-        Window_Geometry::make_request(self, window)
+    pub fn make_window_geometry_request<'a>(&'a self, window: Window) -> (window_geometry::Cookie<'a>, RequestDelay<'a>) {
+        window_geometry::make_request(self, window)
     }
 
     #[inline]
-    pub fn make_window_children_request<'a>(&'a self, window: Window) -> (Window_Children::Cookie<'a>, RequestDelay<'a>) {
-        Window_Children::make_request(self, window)
+    pub fn make_window_children_request<'a>(&'a self, window: Window) -> (window_children::Cookie<'a>, RequestDelay<'a>) {
+        window_children::make_request(self, window)
     }
 
     pub fn change_window_attributes<'a>(&'a self, window: Window, new_attributes: WindowAttributeSet) -> RequestDelay<'a> {
@@ -509,22 +509,22 @@ impl Connection {
     }
 
     pub fn grab_key_chord<'a>(&'a self,
-                              pointer_event_mode: Input::PointerEventMode,
+                              pointer_event_mode: input::PointerEventMode,
                               grab_window: Window,
-                              modifiers: Input::ModkeySet,
-                              keycode: Input::Keycode,
-                              pointer_mode: Input::PointerMode,
-                              keyboard_mode: Input::KeyboardMode
+                              modifiers: input::ModkeySet,
+                              keycode: input::Keycode,
+                              pointer_mode: input::PointerMode,
+                              keyboard_mode: input::KeyboardMode
                              ) -> RequestDelay<'a> {
         let request_delay = RequestDelay::new(self);
         unsafe {
             xcb::xcb_grab_key(self.data,
-                              pointer_event_mode as Input::Pointer_Event_Mode::PointerEventModeInt,
+                              pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
                               grab_window.id(),
                               modifiers.bits(),
                               keycode.data(),
-                              pointer_mode as Input::Pointer_Mode::PointerModeInt,
-                              keyboard_mode as Input::Keyboard_Mode::KeyboardModeInt
+                              pointer_mode as input::pointer_mode::PointerModeInt,
+                              keyboard_mode as input::keyboard_mode::KeyboardModeInt
                              );
         }
         request_delay
@@ -553,15 +553,15 @@ pub struct RectangularSize {
     pub height: u16
 }
 
-pub mod Window_Attribute {
+pub mod window_attribute {
 use xcb;
-pub use self::Background_Pixmap::BackgroundPixmap;
-pub use self::Bit_Gravity::BitGravity;
-pub use self::Win_Gravity::WinGravity;
-pub use self::Backing_Store::BackingStore;
-pub use self::Event::EventSet;
-pub use self::Colormap::ColormapSet;
-pub use self::Cursor::CursorSet;
+pub use self::background_pixmap::BackgroundPixmap;
+pub use self::bit_gravity::BitGravity;
+pub use self::win_gravity::WinGravity;
+pub use self::backing_store::BackingStore;
+pub use self::event::EventSet;
+pub use self::colormap::ColormapSet;
+pub use self::cursor::CursorSet;
 
 ///See documentation for WindowAttributeSet.
 #[deriving(Show)]
@@ -697,7 +697,7 @@ impl WindowAttributeSet {
     }
 }
 
-pub mod Background_Pixmap {
+pub mod background_pixmap {
     use std;
     use xcb;
 
@@ -727,7 +727,7 @@ pub mod Background_Pixmap {
 
 }
 
-pub mod Border_Pixmap {
+pub mod border_pixmap {
     use std;
     use xcb;
 
@@ -754,7 +754,7 @@ pub mod Border_Pixmap {
 
 }
 
-pub mod Bit_Gravity {
+pub mod bit_gravity {
     use xcb;
     pub type BitGravityInt = xcb::xcb_gravity_t;
     assert_type_eq!(BitGravityInt, u32)
@@ -774,7 +774,7 @@ pub mod Bit_Gravity {
     }
 }
 
-pub mod Win_Gravity {
+pub mod win_gravity {
     use xcb;
     pub type WinGravityInt = xcb::xcb_gravity_t;
     assert_type_eq!(WinGravityInt, u32)
@@ -794,7 +794,7 @@ pub mod Win_Gravity {
     }
 }
 
-pub mod Backing_Store {
+pub mod backing_store {
     use xcb;
     pub type BackingStoreInt = xcb::xcb_backing_store_t;
     assert_type_eq!(BackingStoreInt, u32)
@@ -807,7 +807,7 @@ pub mod Backing_Store {
     }
 }
 
-pub mod Event {
+pub mod event {
     use xcb;
     pub type EventInt = xcb::xcb_event_mask_t;
     bitflags!{
@@ -842,7 +842,7 @@ pub mod Event {
     }
 }
 
-pub mod Colormap {
+pub mod colormap {
     use xcb;
     pub type ColormapInt = xcb::xcb_colormap_enum_t;
     bitflags!{
@@ -852,7 +852,7 @@ pub mod Colormap {
     }
 }
 
-pub mod Cursor {
+pub mod cursor {
     use xcb;
     pub type CursorInt = xcb::xcb_cursor_enum_t;
     bitflags!{
@@ -864,14 +864,14 @@ pub mod Cursor {
 
 }
 
-pub mod Input {
-    pub use self::Modkey::ModkeySet;
-    pub use self::Pointer_Mode::PointerMode;
-    pub use self::Keyboard_Mode::KeyboardMode;
-    pub use self::Pointer_Event_Mode::PointerEventMode;
+pub mod input {
+    pub use self::modkey::ModkeySet;
+    pub use self::pointer_mode::PointerMode;
+    pub use self::keyboard_mode::KeyboardMode;
+    pub use self::pointer_event_mode::PointerEventMode;
     use xcb;
 
-pub mod Modkey {
+pub mod modkey {
     use xcb;
     pub type ModkeyInt = u16;
     bitflags!{
@@ -901,7 +901,7 @@ impl Keycode {
     pub fn data(&self) -> KeycodeInt { self.data }
 }
 
-pub mod Pointer_Mode {
+pub mod pointer_mode {
     use xcb;
     pub type PointerModeInt = u8;
     #[deriving(Show)]
@@ -912,7 +912,7 @@ pub mod Pointer_Mode {
     }
 }
 
-pub mod Keyboard_Mode {
+pub mod keyboard_mode {
     use xcb;
     pub type KeyboardModeInt = u8;
     #[deriving(Show)]
@@ -923,7 +923,7 @@ pub mod Keyboard_Mode {
     }
 }
 
-pub mod Pointer_Event_Mode {
+pub mod pointer_event_mode {
     pub type PointerEventModeInt = u8;
     #[deriving(Show)]
     #[repr(u8)]

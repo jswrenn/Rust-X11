@@ -39,11 +39,14 @@ macro_rules! refined_type(
                  pub fn invariant($ID: $C) -> bool {
                      and_all!($($PREDICATES)+)
                  }
+                 ///Construct by assuming `data` satifies the invariant.
                  pub unsafe fn assume(data: $B) -> $A {
                      let val = $A { data: data };
+                     //Assuming should be faster but not difficult to debug.
                      debug_assert!($A::invariant(val));
                      val
                  }
+                 ///Optionally construct depending on whether `data` satisfies the invariant.
                  pub fn new(data: $B) -> Option<$A> {
                      let val = $A { data: data };
                      if $A::invariant(val) {
@@ -54,6 +57,7 @@ macro_rules! refined_type(
                      }
                  }
 
+                 ///Get the underlying data to be free from invariant restrictions.
                  #[inline]
                  pub fn raw(&self) -> $B { self.data }
              }

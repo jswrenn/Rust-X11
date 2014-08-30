@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>X11</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='Connection_Error/index.html'>Connection_Error</a><a class='mod ' href='Connection_Status/index.html'>Connection_Status</a><a class='mod ' href='Input/index.html'>Input</a><a class='mod ' href='Screen_Setup/index.html'>Screen_Setup</a><a class='mod ' href='Window_Attribute/index.html'>Window_Attribute</a><a class='mod ' href='Window_Children/index.html'>Window_Children</a><a class='mod ' href='Window_Geometry/index.html'>Window_Geometry</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Connection.html'>Connection</a><a class='struct ' href='struct.Coordinate.html'>Coordinate</a><a class='struct ' href='struct.RectangularSize.html'>RectangularSize</a><a class='struct ' href='struct.RequestDelay.html'>RequestDelay</a><a class='struct ' href='struct.RequestError.html'>RequestError</a><a class='struct current' href='struct.Screen.html'>Screen</a><a class='struct ' href='struct.Setup.html'>Setup</a><a class='struct ' href='struct.Window.html'>Window</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Cookie.html'>Cookie</a><a class='trait ' href='trait.Reply.html'>Reply</a></div>
+        <p class='location'><a href='index.html'>X11</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='connection_error/index.html'>connection_error</a><a class='mod ' href='connection_status/index.html'>connection_status</a><a class='mod ' href='input/index.html'>input</a><a class='mod ' href='screen_setup/index.html'>screen_setup</a><a class='mod ' href='window/index.html'>window</a><a class='mod ' href='window_attribute/index.html'>window_attribute</a><a class='mod ' href='window_children/index.html'>window_children</a><a class='mod ' href='window_geometry/index.html'>window_geometry</a></div><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Connection.html'>Connection</a><a class='struct ' href='struct.Coordinate.html'>Coordinate</a><a class='struct ' href='struct.RectangularSize.html'>RectangularSize</a><a class='struct ' href='struct.RequestDelay.html'>RequestDelay</a><a class='struct ' href='struct.RequestError.html'>RequestError</a><a class='struct current' href='struct.Screen.html'>Screen</a><a class='struct ' href='struct.Setup.html'>Setup</a></div><div class='block trait'><h2>Traits</h2><a class='trait ' href='trait.Cookie.html'>Cookie</a><a class='trait ' href='trait.Reply.html'>Reply</a></div>
     </section>
 
     <nav class="sub">
@@ -41,13 +41,13 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>X11</a>&#8203;::<a class='struct' href=''>Screen</a>&#8203;</div><div class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>X11</a>::<wbr><a class='struct' href=''>Screen</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-20423' href='../src/X11/src/X11.rs.html#90-92'>[src]</a></div></h1>
+        </span><a id='src-22109' href='../src/X11/src/X11.rs.html#132-134'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct Screen {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../X11/struct.Screen.html' title='X11::Screen'>Screen</a></code></h3><div class='impl-methods'><h4 id='method.root_window' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.root_window' class='fnname'>root_window</a>(&amp;self) -&gt; <a class='struct' href='../X11/struct.Window.html' title='X11::Window'>Window</a></code></h4>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../X11/struct.Screen.html' title='X11::Screen'>Screen</a></code></h3><div class='impl-methods'><h4 id='method.root_window' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.root_window' class='fnname'>root_window</a>(&amp;self) -&gt; <a class='struct' href='../X11/window/struct.Window.html' title='X11::window::Window'>Window</a></code></h4>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/master/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../X11/struct.Screen.html' title='X11::Screen'>Screen</a></code></h3><div class='impl-methods'><h4 id='method.fmt' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/master/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
@@ -78,7 +78,7 @@
             </p>
             <p>
                 Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>struct</code>, <code>enum</code>,
                 <code>trait</code>, <code>typedef</code> (or
                 <code>tdef</code>).
             </p>

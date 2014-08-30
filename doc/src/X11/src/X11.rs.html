@@ -930,6 +930,97 @@
 <span id='888'>888</span>
 <span id='889'>889</span>
 <span id='890'>890</span>
+<span id='891'>891</span>
+<span id='892'>892</span>
+<span id='893'>893</span>
+<span id='894'>894</span>
+<span id='895'>895</span>
+<span id='896'>896</span>
+<span id='897'>897</span>
+<span id='898'>898</span>
+<span id='899'>899</span>
+<span id='900'>900</span>
+<span id='901'>901</span>
+<span id='902'>902</span>
+<span id='903'>903</span>
+<span id='904'>904</span>
+<span id='905'>905</span>
+<span id='906'>906</span>
+<span id='907'>907</span>
+<span id='908'>908</span>
+<span id='909'>909</span>
+<span id='910'>910</span>
+<span id='911'>911</span>
+<span id='912'>912</span>
+<span id='913'>913</span>
+<span id='914'>914</span>
+<span id='915'>915</span>
+<span id='916'>916</span>
+<span id='917'>917</span>
+<span id='918'>918</span>
+<span id='919'>919</span>
+<span id='920'>920</span>
+<span id='921'>921</span>
+<span id='922'>922</span>
+<span id='923'>923</span>
+<span id='924'>924</span>
+<span id='925'>925</span>
+<span id='926'>926</span>
+<span id='927'>927</span>
+<span id='928'>928</span>
+<span id='929'>929</span>
+<span id='930'>930</span>
+<span id='931'>931</span>
+<span id='932'>932</span>
+<span id='933'>933</span>
+<span id='934'>934</span>
+<span id='935'>935</span>
+<span id='936'>936</span>
+<span id='937'>937</span>
+<span id='938'>938</span>
+<span id='939'>939</span>
+<span id='940'>940</span>
+<span id='941'>941</span>
+<span id='942'>942</span>
+<span id='943'>943</span>
+<span id='944'>944</span>
+<span id='945'>945</span>
+<span id='946'>946</span>
+<span id='947'>947</span>
+<span id='948'>948</span>
+<span id='949'>949</span>
+<span id='950'>950</span>
+<span id='951'>951</span>
+<span id='952'>952</span>
+<span id='953'>953</span>
+<span id='954'>954</span>
+<span id='955'>955</span>
+<span id='956'>956</span>
+<span id='957'>957</span>
+<span id='958'>958</span>
+<span id='959'>959</span>
+<span id='960'>960</span>
+<span id='961'>961</span>
+<span id='962'>962</span>
+<span id='963'>963</span>
+<span id='964'>964</span>
+<span id='965'>965</span>
+<span id='966'>966</span>
+<span id='967'>967</span>
+<span id='968'>968</span>
+<span id='969'>969</span>
+<span id='970'>970</span>
+<span id='971'>971</span>
+<span id='972'>972</span>
+<span id='973'>973</span>
+<span id='974'>974</span>
+<span id='975'>975</span>
+<span id='976'>976</span>
+<span id='977'>977</span>
+<span id='978'>978</span>
+<span id='979'>979</span>
+<span id='980'>980</span>
+<span id='981'>981</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;X11&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span> <span class='op'>=</span> <span class='string'>&quot;rlib&quot;</span>]</span>
@@ -937,14 +1028,16 @@
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>raw_pointer_deriving</span>)]</span>
 <span class='attribute'>#[<span class='ident'>phase</span>(<span class='ident'>plugin</span>, <span class='ident'>link</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Connection_Error</span>::<span class='ident'>ConnectionError</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Connection_Status</span>::<span class='ident'>ConnectionStatus</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Screen_Setup</span>::<span class='ident'>ScreenSetup</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Window_Geometry</span>::<span class='ident'>WindowGeometry</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Window_Children</span>::<span class='ident'>WindowChildren</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Window_Attribute</span>::<span class='ident'>WindowMainAttributeSet</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Window_Attribute</span>::<span class='ident'>WindowSubAttributeSet</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>Window_Attribute</span>::<span class='ident'>WindowAttributeSet</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serialize</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>connection_error</span>::<span class='ident'>ConnectionError</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>connection_status</span>::<span class='ident'>ConnectionStatus</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window</span>::<span class='ident'>Window</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>screen_setup</span>::<span class='ident'>ScreenSetup</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window_geometry</span>::<span class='ident'>WindowGeometry</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window_children</span>::<span class='ident'>WindowChildren</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window_attribute</span>::<span class='ident'>WindowMainAttributeSet</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window_attribute</span>::<span class='ident'>WindowSubAttributeSet</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>window_attribute</span>::<span class='ident'>WindowAttributeSet</span>;
 
 <span class='kw'>mod</span> <span class='ident'>xcb</span>;
 
@@ -956,6 +1049,46 @@
         );
 )
 
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>refined_type</span>(
+    ($(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ATTRIBUTES</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+     <span class='ident'>refined</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>:<span class='ident'>ident</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>B</span>:<span class='ident'>ident</span> <span class='kw'>where</span>
+         <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ID</span>:<span class='ident'>ident</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>C</span>:<span class='ident'>ty</span><span class='op'>|</span> <span class='op'>-&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>PROPERTIES</span>:<span class='ident'>ident</span> <span class='op'>&lt;=</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>PREDICATES</span>:<span class='ident'>expr</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> (
+             $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ATTRIBUTES</span>]</span>)<span class='op'>*</span>
+             <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span> {
+                 <span class='ident'>data</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>B</span>
+             }
+
+             <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span> {
+                 $(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>PROPERTIES</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ID</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>PREDICATES</span> } )<span class='op'>+</span>
+                 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>invariant</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ID</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+                     <span class='macro'>and_all</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>PREDICATES</span>)<span class='op'>+</span>)
+                 }
+                 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>assume</span>(<span class='ident'>data</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>B</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span> {
+                     <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span> { <span class='ident'>data</span>: <span class='ident'>data</span> };
+                     <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>::<span class='ident'>invariant</span>(<span class='ident'>val</span>));
+                     <span class='ident'>val</span>
+                 }
+                 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>data</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>B</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span><span class='op'>&gt;</span> {
+                     <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span> { <span class='ident'>data</span>: <span class='ident'>data</span> };
+                     <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>::<span class='ident'>invariant</span>(<span class='ident'>val</span>) {
+                         <span class='prelude-val'>None</span>
+                     }
+                     <span class='kw'>else</span> {
+                         <span class='prelude-val'>Some</span>(<span class='ident'>val</span>)
+                     }
+                 }
+
+                 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+                 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>raw</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>B</span> { <span class='self'>self</span>.<span class='ident'>data</span> }
+             }
+    );
+)
+
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>and_all</span>(
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>);
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>:<span class='ident'>expr</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>XS</span>:<span class='ident'>expr</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> ( (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>) <span class='op'>&amp;&amp;</span> ($(<span class='macro'>and_all</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>XS</span>))<span class='op'>+</span>));
+)
+
 <span class='doccomment'>///Represents a connection to an X server.</span>
 <span class='doccomment'>///Will automatically disconnect from the X server at end of object lifetime.</span>
 <span class='doccomment'>///Guaranteed to be a valid connection upon successful construction **but not after**.</span>
@@ -964,7 +1097,7 @@
     <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_connection_t</span>
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Connection_Error</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>connection_error</span> {
 <span class='doccomment'>///This enum should represent a one-to-one mapping of the return values &gt; 0 of</span>
 <span class='doccomment'>///xcb_connection_has_error.</span>
 <span class='comment'>//This enum should have identical size to an int in C to make it safe to cast</span>
@@ -997,7 +1130,7 @@
 }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Connection_Status</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>connection_status</span> {
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ConnectionStatus</span> {
     <span class='ident'>Valid</span>,
     <span class='ident'>Invalid</span>(::<span class='ident'>ConnectionError</span>)
@@ -1024,22 +1157,25 @@
     <span class='ident'>data</span>: <span class='ident'>xcb</span>::<span class='ident'>xcb_screen_t</span>
 }
 
-<span class='comment'>//This is like a Haskell newtype.</span>
-<span class='comment'>//Adding/removing/changing fields invalidates code which transmutes between the underlying type</span>
-<span class='comment'>//and the struct.</span>
-<span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Window</span> {
-    <span class='ident'>data</span>: <span class='ident'>xcb</span>::<span class='ident'>xcb_window_t</span>
-}
-
-<span class='kw'>impl</span> <span class='ident'>Window</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>id</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>data</span> }
-}
-
 <span class='kw'>impl</span> <span class='ident'>Screen</span> {
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>root_window</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Window</span> {
-        <span class='ident'>Window</span> { <span class='ident'>data</span>: <span class='self'>self</span>.<span class='ident'>data</span>.<span class='ident'>root</span> }
+        <span class='comment'>//FIXME Is this assumption justified?</span>
+        <span class='kw'>unsafe</span> { <span class='ident'>Window</span>::<span class='ident'>assume</span>(<span class='self'>self</span>.<span class='ident'>data</span>.<span class='ident'>root</span>) }
     }
+}
+
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>window</span> {
+    <span class='kw'>use</span> <span class='ident'>xcb</span>;
+
+    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>WindowInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_window_t</span>;
+
+    <span class='macro'>refined_type</span><span class='macro'>!</span>{
+        <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Hash</span>, <span class='ident'>Encodable</span>, <span class='ident'>Decodable</span>, <span class='ident'>Rand</span>)]</span>
+        <span class='ident'>refined</span> <span class='ident'>Window</span> <span class='op'>=</span> <span class='ident'>WindowInt</span> <span class='kw'>where</span> <span class='op'>|</span><span class='ident'>w</span>: <span class='ident'>Window</span><span class='op'>|</span> <span class='op'>-&gt;</span>
+            <span class='ident'>non_null</span> <span class='op'>&lt;=</span><span class='op'>&gt;</span> <span class='ident'>w</span>.<span class='ident'>data</span> <span class='op'>!=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_WINDOW_NONE</span>
+    }
+
 }
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RequestError</span> {
@@ -1052,7 +1188,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Screen_Setup</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>screen_setup</span> {
 <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>std</span>, <span class='ident'>xcb</span>, <span class='ident'>Setup</span>, <span class='ident'>Screen</span>};
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ScreenSetup</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
@@ -1185,7 +1321,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Window_Geometry</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>window_geometry</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Connection</span>, <span class='ident'>Window</span>, <span class='ident'>RequestError</span>, <span class='ident'>RequestDelay</span>, <span class='ident'>Coordinate</span>, <span class='ident'>RectangularSize</span>, <span class='ident'>xcb</span>, <span class='ident'>std</span>, <span class='ident'>libc</span>};
 
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
@@ -1196,7 +1332,7 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>connection</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Connection</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
         <span class='kw'>let</span> <span class='ident'>cookie</span> <span class='op'>=</span> <span class='ident'>Cookie</span> {
-            <span class='ident'>data</span>: <span class='kw'>unsafe</span> { <span class='ident'>xcb</span>::<span class='ident'>xcb_get_geometry</span>(<span class='ident'>connection</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>id</span>()) },
+            <span class='ident'>data</span>: <span class='kw'>unsafe</span> { <span class='ident'>xcb</span>::<span class='ident'>xcb_get_geometry</span>(<span class='ident'>connection</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>raw</span>()) },
             <span class='ident'>connection</span>: <span class='ident'>connection</span>
         };
         <span class='kw'>let</span> <span class='ident'>request_delay</span> <span class='op'>=</span> <span class='ident'>RequestDelay</span>::<span class='ident'>new</span>(<span class='ident'>connection</span>);
@@ -1264,7 +1400,7 @@
     <span class='kw'>impl</span> <span class='ident'>super</span>::<span class='ident'>Reply</span> <span class='kw'>for</span> <span class='ident'>Reply</span> {}
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Window_Children</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>window_children</span> {
 <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Connection</span>, <span class='ident'>Window</span>, <span class='ident'>xcb</span>, <span class='ident'>RequestDelay</span>, <span class='ident'>RequestError</span>, <span class='ident'>std</span>, <span class='ident'>libc</span>};
 
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
@@ -1275,7 +1411,7 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>connection</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Connection</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
         <span class='kw'>let</span> <span class='ident'>cookie</span> <span class='op'>=</span> <span class='ident'>Cookie</span> {
-            <span class='ident'>data</span>: <span class='kw'>unsafe</span> { <span class='ident'>xcb</span>::<span class='ident'>xcb_query_tree</span>(<span class='ident'>connection</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>id</span>()) },
+            <span class='ident'>data</span>: <span class='kw'>unsafe</span> { <span class='ident'>xcb</span>::<span class='ident'>xcb_query_tree</span>(<span class='ident'>connection</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>raw</span>()) },
             <span class='ident'>connection</span>: <span class='ident'>connection</span>
         };
         <span class='kw'>let</span> <span class='ident'>request_delay</span> <span class='op'>=</span> <span class='ident'>RequestDelay</span>::<span class='ident'>new</span>(<span class='ident'>connection</span>);
@@ -1364,11 +1500,11 @@
         <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>possible_connection_ptr</span>.<span class='ident'>is_null</span>(), <span class='string'>&quot;Null pointer returned by call to xcb_connect. This should be impossible.&quot;</span>)
         <span class='kw'>let</span> <span class='ident'>possible_connection</span> <span class='op'>=</span> <span class='ident'>Connection</span> { <span class='ident'>data</span>: <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>possible_connection_ptr</span> } };
         <span class='kw'>match</span> <span class='ident'>possible_connection</span>.<span class='ident'>status</span>() {
-            <span class='ident'>Connection_Status</span>::<span class='ident'>Valid</span> <span class='op'>=&gt;</span> {
+            <span class='ident'>connection_status</span>::<span class='ident'>Valid</span> <span class='op'>=&gt;</span> {
                 <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Connected to X server.&quot;</span>)
                 <span class='prelude-val'>Ok</span>(<span class='ident'>possible_connection</span>)
             }
-            <span class='ident'>Connection_Status</span>::<span class='ident'>Invalid</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> {
+            <span class='ident'>connection_status</span>::<span class='ident'>Invalid</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> {
                 <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Unable to connect to X server.&quot;</span>)
                 <span class='prelude-val'>Err</span>(<span class='ident'>error</span>)
             }
@@ -1391,10 +1527,10 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>status</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ConnectionStatus</span> {
         <span class='kw'>let</span> <span class='ident'>connection_status</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>xcb</span>::<span class='ident'>xcb_connection_has_error</span>(<span class='self'>self</span>.<span class='ident'>data</span>) };
         <span class='kw'>match</span> <span class='ident'>connection_status</span> {
-            <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='ident'>Connection_Status</span>::<span class='ident'>Valid</span>,
+            <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='ident'>connection_status</span>::<span class='ident'>Valid</span>,
             <span class='ident'>n</span> <span class='op'>=&gt;</span> {
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>n</span> <span class='op'>&gt;=</span> <span class='ident'>Connection_Error</span>::<span class='ident'>Generic</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span> <span class='op'>&amp;&amp;</span> <span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='ident'>Connection_Error</span>::<span class='ident'>FDPassingFailure</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>, <span class='string'>&quot;A call to xcb_connection_has_error returned a value outside the expected range.&quot;</span>)
-                <span class='ident'>Connection_Status</span>::<span class='ident'>Invalid</span>(<span class='kw'>unsafe</span> { <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>n</span>) })
+                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>n</span> <span class='op'>&gt;=</span> <span class='ident'>connection_error</span>::<span class='ident'>Generic</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span> <span class='op'>&amp;&amp;</span> <span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='ident'>connection_error</span>::<span class='ident'>FDPassingFailure</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>, <span class='string'>&quot;A call to xcb_connection_has_error returned a value outside the expected range.&quot;</span>)
+                <span class='ident'>connection_status</span>::<span class='ident'>Invalid</span>(<span class='kw'>unsafe</span> { <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>n</span>) })
             }
         }
     }
@@ -1402,7 +1538,7 @@
     <span class='doccomment'>///Test if connected to the X server.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_valid</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>status</span>() {
-            <span class='ident'>Connection_Status</span>::<span class='ident'>Valid</span> <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
+            <span class='ident'>connection_status</span>::<span class='ident'>Valid</span> <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
             _                        <span class='op'>=&gt;</span> <span class='boolval'>false</span>
         }
     }
@@ -1422,13 +1558,13 @@
     }
      
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_window_geometry_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>Window_Geometry</span>::<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
-        <span class='ident'>Window_Geometry</span>::<span class='ident'>make_request</span>(<span class='self'>self</span>, <span class='ident'>window</span>)
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_window_geometry_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>window_geometry</span>::<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
+        <span class='ident'>window_geometry</span>::<span class='ident'>make_request</span>(<span class='self'>self</span>, <span class='ident'>window</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_window_children_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>Window_Children</span>::<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
-        <span class='ident'>Window_Children</span>::<span class='ident'>make_request</span>(<span class='self'>self</span>, <span class='ident'>window</span>)
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>make_window_children_request</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>) <span class='op'>-&gt;</span> (<span class='ident'>window_children</span>::<span class='ident'>Cookie</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) {
+        <span class='ident'>window_children</span>::<span class='ident'>make_request</span>(<span class='self'>self</span>, <span class='ident'>window</span>)
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>change_window_attributes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>window</span>: <span class='ident'>Window</span>, <span class='ident'>new_attributes</span>: <span class='ident'>WindowAttributeSet</span>) <span class='op'>-&gt;</span> <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
@@ -1436,28 +1572,28 @@
         <span class='kw'>let</span> <span class='ident'>main_attributes</span> <span class='op'>=</span> <span class='ident'>new_attributes</span>.<span class='ident'>main_attributes</span>().<span class='ident'>bits</span>();
         <span class='kw'>let</span> <span class='ident'>sub_attributes</span> <span class='op'>=</span> <span class='ident'>new_attributes</span>.<span class='ident'>sub_attribute_array</span>();
         <span class='kw'>unsafe</span> {
-            <span class='ident'>xcb</span>::<span class='ident'>xcb_change_window_attributes</span>(<span class='self'>self</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>id</span>(), <span class='ident'>main_attributes</span>, <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub_attributes</span>));
+            <span class='ident'>xcb</span>::<span class='ident'>xcb_change_window_attributes</span>(<span class='self'>self</span>.<span class='ident'>data</span>, <span class='ident'>window</span>.<span class='ident'>raw</span>(), <span class='ident'>main_attributes</span>, <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='kw-2'>&amp;</span><span class='ident'>sub_attributes</span>));
         }
         <span class='ident'>request_delay</span>
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>grab_key_chord</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,
-                              <span class='ident'>pointer_event_mode</span>: <span class='ident'>Input</span>::<span class='ident'>PointerEventMode</span>,
+                              <span class='ident'>pointer_event_mode</span>: <span class='ident'>input</span>::<span class='ident'>PointerEventMode</span>,
                               <span class='ident'>grab_window</span>: <span class='ident'>Window</span>,
-                              <span class='ident'>modifiers</span>: <span class='ident'>Input</span>::<span class='ident'>ModkeySet</span>,
-                              <span class='ident'>keycode</span>: <span class='ident'>Input</span>::<span class='ident'>Keycode</span>,
-                              <span class='ident'>pointer_mode</span>: <span class='ident'>Input</span>::<span class='ident'>PointerMode</span>,
-                              <span class='ident'>keyboard_mode</span>: <span class='ident'>Input</span>::<span class='ident'>KeyboardMode</span>
+                              <span class='ident'>modifiers</span>: <span class='ident'>input</span>::<span class='ident'>ModkeySet</span>,
+                              <span class='ident'>keycode</span>: <span class='ident'>input</span>::<span class='ident'>Keycode</span>,
+                              <span class='ident'>pointer_mode</span>: <span class='ident'>input</span>::<span class='ident'>PointerMode</span>,
+                              <span class='ident'>keyboard_mode</span>: <span class='ident'>input</span>::<span class='ident'>KeyboardMode</span>
                              ) <span class='op'>-&gt;</span> <span class='ident'>RequestDelay</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>request_delay</span> <span class='op'>=</span> <span class='ident'>RequestDelay</span>::<span class='ident'>new</span>(<span class='self'>self</span>);
         <span class='kw'>unsafe</span> {
             <span class='ident'>xcb</span>::<span class='ident'>xcb_grab_key</span>(<span class='self'>self</span>.<span class='ident'>data</span>,
-                              <span class='ident'>pointer_event_mode</span> <span class='kw'>as</span> <span class='ident'>Input</span>::<span class='ident'>Pointer_Event_Mode</span>::<span class='ident'>PointerEventModeInt</span>,
-                              <span class='ident'>grab_window</span>.<span class='ident'>id</span>(),
+                              <span class='ident'>pointer_event_mode</span> <span class='kw'>as</span> <span class='ident'>input</span>::<span class='ident'>pointer_event_mode</span>::<span class='ident'>PointerEventModeInt</span>,
+                              <span class='ident'>grab_window</span>.<span class='ident'>raw</span>(),
                               <span class='ident'>modifiers</span>.<span class='ident'>bits</span>(),
                               <span class='ident'>keycode</span>.<span class='ident'>data</span>(),
-                              <span class='ident'>pointer_mode</span> <span class='kw'>as</span> <span class='ident'>Input</span>::<span class='ident'>Pointer_Mode</span>::<span class='ident'>PointerModeInt</span>,
-                              <span class='ident'>keyboard_mode</span> <span class='kw'>as</span> <span class='ident'>Input</span>::<span class='ident'>Keyboard_Mode</span>::<span class='ident'>KeyboardModeInt</span>
+                              <span class='ident'>pointer_mode</span> <span class='kw'>as</span> <span class='ident'>input</span>::<span class='ident'>pointer_mode</span>::<span class='ident'>PointerModeInt</span>,
+                              <span class='ident'>keyboard_mode</span> <span class='kw'>as</span> <span class='ident'>input</span>::<span class='ident'>keyboard_mode</span>::<span class='ident'>KeyboardModeInt</span>
                              );
         }
         <span class='ident'>request_delay</span>
@@ -1486,40 +1622,40 @@
     <span class='kw'>pub</span> <span class='ident'>height</span>: <span class='ident'>u16</span>
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Window_Attribute</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>window_attribute</span> {
 <span class='kw'>use</span> <span class='ident'>xcb</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Back_Pixmap</span>::<span class='ident'>BackPixmapSet</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Bit_Gravity</span>::<span class='ident'>BitGravity</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Win_Gravity</span>::<span class='ident'>WinGravity</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Backing_Store</span>::<span class='ident'>BackingStore</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Event</span>::<span class='ident'>EventSet</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Colormap</span>::<span class='ident'>ColormapSet</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Cursor</span>::<span class='ident'>CursorSet</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>background_pixmap</span>::<span class='ident'>BackgroundPixmap</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>bit_gravity</span>::<span class='ident'>BitGravity</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>win_gravity</span>::<span class='ident'>WinGravity</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>backing_store</span>::<span class='ident'>BackingStore</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>event</span>::<span class='ident'>EventSet</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>colormap</span>::<span class='ident'>ColormapSet</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>cursor</span>::<span class='ident'>CursorSet</span>;
 
 <span class='doccomment'>///See documentation for WindowAttributeSet.</span>
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>WindowSubAttributeSet</span> {
-    <span class='kw'>pub</span> <span class='ident'>back_pixmap_set</span>: <span class='ident'>BackPixmapSet</span>,
-    <span class='kw'>pub</span> <span class='ident'>bit_gravity</span>:     <span class='ident'>BitGravity</span>,
-    <span class='kw'>pub</span> <span class='ident'>win_gravity</span>:     <span class='ident'>WinGravity</span>,
-    <span class='kw'>pub</span> <span class='ident'>backing_store</span>:   <span class='ident'>BackingStore</span>,
-    <span class='kw'>pub</span> <span class='ident'>event_set</span>:       <span class='ident'>EventSet</span>,
-    <span class='kw'>pub</span> <span class='ident'>colormap_set</span>:    <span class='ident'>ColormapSet</span>,
-    <span class='kw'>pub</span> <span class='ident'>cursor_set</span>:      <span class='ident'>CursorSet</span>
+    <span class='kw'>pub</span> <span class='ident'>background_pixmap</span>: <span class='ident'>BackgroundPixmap</span>,
+    <span class='kw'>pub</span> <span class='ident'>bit_gravity</span>:       <span class='ident'>BitGravity</span>,
+    <span class='kw'>pub</span> <span class='ident'>win_gravity</span>:       <span class='ident'>WinGravity</span>,
+    <span class='kw'>pub</span> <span class='ident'>backing_store</span>:     <span class='ident'>BackingStore</span>,
+    <span class='kw'>pub</span> <span class='ident'>event_set</span>:         <span class='ident'>EventSet</span>,
+    <span class='kw'>pub</span> <span class='ident'>colormap_set</span>:      <span class='ident'>ColormapSet</span>,
+    <span class='kw'>pub</span> <span class='ident'>cursor_set</span>:        <span class='ident'>CursorSet</span>
 }
 
 <span class='kw'>impl</span> <span class='ident'>WindowSubAttributeSet</span> {
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>back_pixmap_set_</span>: <span class='ident'>BackPixmapSet</span>,
-               <span class='ident'>bit_gravity_</span>:     <span class='ident'>BitGravity</span>,
-               <span class='ident'>win_gravity_</span>:     <span class='ident'>WinGravity</span>,
-               <span class='ident'>backing_store_</span>:   <span class='ident'>BackingStore</span>,
-               <span class='ident'>event_set_</span>:       <span class='ident'>EventSet</span>,
-               <span class='ident'>colormap_set_</span>:    <span class='ident'>ColormapSet</span>,
-               <span class='ident'>cursor_set_</span>:      <span class='ident'>CursorSet</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>background_pixmap_</span>: <span class='ident'>BackgroundPixmap</span>,
+               <span class='ident'>bit_gravity_</span>:       <span class='ident'>BitGravity</span>,
+               <span class='ident'>win_gravity_</span>:       <span class='ident'>WinGravity</span>,
+               <span class='ident'>backing_store_</span>:     <span class='ident'>BackingStore</span>,
+               <span class='ident'>event_set_</span>:         <span class='ident'>EventSet</span>,
+               <span class='ident'>colormap_set_</span>:      <span class='ident'>ColormapSet</span>,
+               <span class='ident'>cursor_set_</span>:        <span class='ident'>CursorSet</span>
               ) <span class='op'>-&gt;</span> <span class='ident'>WindowSubAttributeSet</span> {
         <span class='ident'>WindowSubAttributeSet</span> {
-            <span class='ident'>back_pixmap_set</span>: <span class='ident'>back_pixmap_set_</span>,
+            <span class='ident'>background_pixmap</span>: <span class='ident'>background_pixmap_</span>,
             <span class='ident'>bit_gravity</span>:     <span class='ident'>bit_gravity_</span>,
             <span class='ident'>win_gravity</span>:     <span class='ident'>win_gravity_</span>,
             <span class='ident'>backing_store</span>:   <span class='ident'>backing_store_</span>,
@@ -1533,8 +1669,8 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_array_for_attr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>window_attributes</span>: <span class='ident'>WindowMainAttributeSet</span>) <span class='op'>-&gt;</span> [<span class='ident'>u32</span>, ..<span class='number'>7</span>] {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span>: [<span class='ident'>u32</span>, ..<span class='number'>7</span>] <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>];
-        <span class='kw'>if</span> <span class='ident'>window_attributes</span>.<span class='ident'>intersects</span>(<span class='ident'>back_pixmap</span>) {
-            <span class='ident'>result</span>[<span class='ident'>i</span>] <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>back_pixmap_set</span>.<span class='ident'>bits</span>();
+        <span class='kw'>if</span> <span class='ident'>window_attributes</span>.<span class='ident'>intersects</span>(<span class='ident'>background_pixmap</span>) {
+            <span class='ident'>result</span>[<span class='ident'>i</span>] <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>background_pixmap</span>.<span class='ident'>as_u32</span>();
             <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
         }
         <span class='kw'>if</span> <span class='ident'>window_attributes</span>.<span class='ident'>intersects</span>(<span class='ident'>bit_gravity</span>) {
@@ -1569,15 +1705,15 @@
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>WindowMainAttributeInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_cw_t</span>;
 <span class='macro'>bitflags</span><span class='macro'>!</span>{
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span> <span class='ident'>flags</span> <span class='ident'>WindowMainAttributeSet</span>: <span class='ident'>WindowMainAttributeInt</span> {
-        <span class='kw'>static</span> <span class='ident'>back_pixmap</span>        <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACK_PIXMAP</span>,
-        <span class='kw'>static</span> <span class='ident'>back_pixel</span>         <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACKING_PIXEL</span>,
+        <span class='kw'>static</span> <span class='ident'>background_pixmap</span>  <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACK_PIXMAP</span>,
+        <span class='kw'>static</span> <span class='ident'>background_pixel</span>   <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACK_PIXEL</span>,
         <span class='kw'>static</span> <span class='ident'>border_pixmap</span>      <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BORDER_PIXMAP</span>,
         <span class='kw'>static</span> <span class='ident'>border_pixel</span>       <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BORDER_PIXEL</span>,
         <span class='kw'>static</span> <span class='ident'>bit_gravity</span>        <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BIT_GRAVITY</span>,
         <span class='kw'>static</span> <span class='ident'>win_gravity</span>        <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_WIN_GRAVITY</span>,
         <span class='kw'>static</span> <span class='ident'>backing_store</span>      <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACKING_STORE</span>,
         <span class='kw'>static</span> <span class='ident'>backing_planes</span>     <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACKING_PLANES</span>,
-        <span class='kw'>static</span> <span class='ident'>backing_pixel</span>      <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACK_PIXEL</span>,
+        <span class='kw'>static</span> <span class='ident'>backing_pixel</span>      <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_BACKING_PIXEL</span>,
         <span class='kw'>static</span> <span class='ident'>override_reddirect</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_OVERRIDE_REDIRECT</span>,
         <span class='kw'>static</span> <span class='ident'>save_under</span>         <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_SAVE_UNDER</span>,
         <span class='kw'>static</span> <span class='ident'>event</span>              <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_CW_EVENT_MASK</span>,
@@ -1630,18 +1766,64 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Back_Pixmap</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>background_pixmap</span> {
+    <span class='kw'>use</span> <span class='ident'>std</span>;
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>BackPixmapInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_back_pixmap_t</span>;
-    <span class='macro'>bitflags</span><span class='macro'>!</span>{
-        <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span> <span class='ident'>flags</span> <span class='ident'>BackPixmapSet</span>: <span class='ident'>BackPixmapInt</span> {
-            <span class='kw'>static</span> <span class='ident'>none</span>            <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_BACK_PIXMAP_NONE</span>,
-            <span class='kw'>static</span> <span class='ident'>parent_relative</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_BACK_PIXMAP_PARENT_RELATIVE</span>
-        }
+
+    <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BackgroundPixmap</span> {
+        <span class='ident'>data</span>: <span class='ident'>u32</span>
     }
+
+    <span class='kw'>static</span> <span class='ident'>none</span>: <span class='ident'>BackgroundPixmap</span> <span class='op'>=</span> <span class='ident'>BackgroundPixmap</span> { <span class='ident'>data</span>: <span class='ident'>xcb</span>::<span class='ident'>XCB_BACK_PIXMAP_NONE</span> };
+    <span class='kw'>static</span> <span class='ident'>parent_relative</span>: <span class='ident'>BackgroundPixmap</span> <span class='op'>=</span> <span class='ident'>BackgroundPixmap</span> { <span class='ident'>data</span>: <span class='ident'>xcb</span>::<span class='ident'>XCB_BACK_PIXMAP_PARENT_RELATIVE</span> };
+
+    <span class='kw'>impl</span> <span class='ident'>BackgroundPixmap</span> {
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>BackgroundPixmap</span> {
+            <span class='ident'>BackgroundPixmap</span> { <span class='ident'>data</span>: <span class='ident'>n</span> }
+        }
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_pixmap</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { (<span class='op'>*</span><span class='self'>self</span> <span class='op'>!=</span> <span class='self'>self</span>::<span class='ident'>none</span>) <span class='op'>&amp;&amp;</span> (<span class='op'>*</span><span class='self'>self</span> <span class='op'>!=</span> <span class='self'>self</span>::<span class='ident'>parent_relative</span>) }
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_u32</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>data</span> }
+    }
+
+    <span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>BackgroundPixmap</span> {
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>BackgroundPixmap</span> { <span class='self'>self</span>::<span class='ident'>none</span> }
+    }
+
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Bit_Gravity</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>border_pixmap</span> {
+    <span class='kw'>use</span> <span class='ident'>std</span>;
+    <span class='kw'>use</span> <span class='ident'>xcb</span>;
+
+    <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BorderPixmap</span> {
+        <span class='ident'>data</span>: <span class='ident'>u32</span>
+    }
+
+    <span class='kw'>static</span> <span class='ident'>copy_from_parent</span>: <span class='ident'>BorderPixmap</span> <span class='op'>=</span> <span class='ident'>BorderPixmap</span> { <span class='ident'>data</span>: <span class='ident'>xcb</span>::<span class='ident'>XCB_COPY_FROM_PARENT</span> };
+
+    <span class='kw'>impl</span> <span class='ident'>BorderPixmap</span> {
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>BorderPixmap</span> { <span class='ident'>BorderPixmap</span> { <span class='ident'>data</span>: <span class='ident'>n</span> } }
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_pixmap</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='op'>*</span><span class='self'>self</span> <span class='op'>!=</span> <span class='self'>self</span>::<span class='ident'>copy_from_parent</span> }
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_u32</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>data</span> }
+    }
+
+    <span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>BorderPixmap</span> {
+        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+        <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>BorderPixmap</span> { <span class='self'>self</span>::<span class='ident'>copy_from_parent</span> }
+    }
+
+}
+
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>bit_gravity</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>BitGravityInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_gravity_t</span>;
     <span class='macro'>assert_type_eq</span><span class='macro'>!</span>(<span class='ident'>BitGravityInt</span>, <span class='ident'>u32</span>)
@@ -1661,7 +1843,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Win_Gravity</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>win_gravity</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>WinGravityInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_gravity_t</span>;
     <span class='macro'>assert_type_eq</span><span class='macro'>!</span>(<span class='ident'>WinGravityInt</span>, <span class='ident'>u32</span>)
@@ -1681,7 +1863,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Backing_Store</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>backing_store</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>BackingStoreInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_backing_store_t</span>;
     <span class='macro'>assert_type_eq</span><span class='macro'>!</span>(<span class='ident'>BackingStoreInt</span>, <span class='ident'>u32</span>)
@@ -1694,7 +1876,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Event</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>event</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>EventInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_event_mask_t</span>;
     <span class='macro'>bitflags</span><span class='macro'>!</span>{
@@ -1729,7 +1911,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Colormap</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>colormap</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>ColormapInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_colormap_enum_t</span>;
     <span class='macro'>bitflags</span><span class='macro'>!</span>{
@@ -1739,7 +1921,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Cursor</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>cursor</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>CursorInt</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>xcb_cursor_enum_t</span>;
     <span class='macro'>bitflags</span><span class='macro'>!</span>{
@@ -1751,20 +1933,20 @@
 
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Input</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Modkey</span>::<span class='ident'>ModkeySet</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Pointer_Mode</span>::<span class='ident'>PointerMode</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Keyboard_Mode</span>::<span class='ident'>KeyboardMode</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Pointer_Event_Mode</span>::<span class='ident'>PointerEventMode</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>input</span> {
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>modkey</span>::<span class='ident'>ModkeySet</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>pointer_mode</span>::<span class='ident'>PointerMode</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>keyboard_mode</span>::<span class='ident'>KeyboardMode</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>pointer_event_mode</span>::<span class='ident'>PointerEventMode</span>;
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Modkey</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>modkey</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>ModkeyInt</span> <span class='op'>=</span> <span class='ident'>u16</span>;
     <span class='macro'>bitflags</span><span class='macro'>!</span>{
         <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span> <span class='ident'>flags</span> <span class='ident'>ModkeySet</span>: <span class='ident'>ModkeyInt</span> {
             <span class='kw'>static</span> <span class='ident'>shift</span>     <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_SHIFT</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
-            <span class='kw'>static</span> <span class='ident'>caps_lock</span> <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_LOCK</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
+            <span class='kw'>static</span> <span class='ident'>lock</span>      <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_LOCK</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
             <span class='kw'>static</span> <span class='ident'>control</span>   <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_CONTROL</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
             <span class='kw'>static</span> <span class='ident'>mod_1</span>     <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_1</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
             <span class='kw'>static</span> <span class='ident'>mod_2</span>     <span class='op'>=</span> <span class='ident'>xcb</span>::<span class='ident'>XCB_MOD_MASK_2</span> <span class='kw'>as</span> <span class='ident'>ModkeyInt</span>,
@@ -1788,7 +1970,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>data</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>KeycodeInt</span> { <span class='self'>self</span>.<span class='ident'>data</span> }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Pointer_Mode</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>pointer_mode</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>PointerModeInt</span> <span class='op'>=</span> <span class='ident'>u8</span>;
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
@@ -1799,7 +1981,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Keyboard_Mode</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>keyboard_mode</span> {
     <span class='kw'>use</span> <span class='ident'>xcb</span>;
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>KeyboardModeInt</span> <span class='op'>=</span> <span class='ident'>u8</span>;
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
@@ -1810,7 +1992,7 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Pointer_Event_Mode</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>pointer_event_mode</span> {
     <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>PointerEventModeInt</span> <span class='op'>=</span> <span class='ident'>u8</span>;
     <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
     <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
@@ -1851,7 +2033,7 @@
             </p>
             <p>
                 Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code> (or <code>str</code>), <code>enum</code>,
+                <code>struct</code>, <code>enum</code>,
                 <code>trait</code>, <code>typedef</code> (or
                 <code>tdef</code>).
             </p>

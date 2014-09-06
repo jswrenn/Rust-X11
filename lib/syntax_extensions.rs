@@ -15,14 +15,13 @@ use std::gc::{Gc, GC};
 #[plugin_registrar]
 pub fn registrar(reg: &mut rustc::plugin::Registry) {
   reg.register_syntax_extension(token::intern("make_predicate"),
-                                ItemModifier(make_predicate_expand));
+                                ItemModifier(expand_make_predicate));
 }
 
-fn make_predicate_expand(context: &mut ExtCtxt, span: Span, metaitem: Gc<ast::MetaItem>,
+fn expand_make_predicate(context: &mut ExtCtxt, span: Span, metaitem: Gc<ast::MetaItem>,
                          item: Gc<ast::Item>) -> Gc<ast::Item> {
     println!("{}", metaitem);
     println!("{}", item);
-    println!("testing.... testing");
     match item.node {
         ast::ItemFn(..) => {
             let old_name = item.ident.as_str();

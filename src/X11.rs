@@ -2,9 +2,11 @@
 #![crate_type = "rlib"]
 #![feature(macro_rules, phase, unsafe_destructor)]
 #![allow(raw_pointer_deriving)]
-#[phase(plugin, link)] extern crate log;
-#[phase(plugin)] extern crate syntax_extensions;
 
+#[phase(plugin, link)]
+extern crate log;
+#[phase(plugin)]
+extern crate syntax_extensions;
 extern crate libc;
 extern crate serialize;
 
@@ -37,11 +39,11 @@ macro_rules! refined_type(
                  data: $B
              }
 
+             #[method_modifiers]
              impl $A {
-                 $(  #[make_predicate]
+                 $(  #[change_ident_to(is_, $PROPERTIES)]
                      pub fn $PROPERTIES($ID: $C) -> bool { $PREDICATES }
                   )+
-                 //$(make_predicate!($PROPERTIES, ($ID: $C), $PREDICATES))+
                  pub fn invariant($ID: $C) -> bool {
                      and_all!($($PREDICATES)+)
                  }

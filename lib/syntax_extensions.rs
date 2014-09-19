@@ -79,7 +79,7 @@ fn expand_method_modifiers(context: &mut ExtCtxt, span: Span, metaitem: &ast::Me
                     })
                 }
                 _ => {
-                    context.span_err(span, "“method_modifiers” expects an impl item.");
+                    context.span_err(span, "“method_modifiers” expects an item impl.");
                     item.clone()
                 }
             }

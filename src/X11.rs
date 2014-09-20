@@ -67,6 +67,7 @@ macro_rules! refined_type(
 
                  ///Get the underlying data to be free from invariant restrictions.
                  #[inline]
+                 #[change_ident_to(as_, snake_case($B))]
                  pub fn raw(&self) -> $B { self.data }
              }
     );
@@ -320,7 +321,7 @@ pub mod window_geometry {
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_get_geometry(connection.data, window.raw()) },
+            data: unsafe { xcb::xcb_get_geometry(connection.data, window.as_window_int()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -399,7 +400,7 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     pub fn make_request<'a>(connection: &'a Connection, window: Window) -> (Cookie<'a>, RequestDelay<'a>) {
         let cookie = Cookie {
-            data: unsafe { xcb::xcb_query_tree(connection.data, window.raw()) },
+            data: unsafe { xcb::xcb_query_tree(connection.data, window.as_window_int()) },
             connection: connection
         };
         let request_delay = RequestDelay::new(connection);
@@ -560,7 +561,7 @@ impl Connection {
         let main_attributes = new_attributes.main_attributes().bits();
         let sub_attributes = new_attributes.sub_attribute_array();
         unsafe {
-            xcb::xcb_change_window_attributes(self.data, window.raw(), main_attributes, std::mem::transmute(&sub_attributes));
+            xcb::xcb_change_window_attributes(self.data, window.as_window_int(), main_attributes, std::mem::transmute(&sub_attributes));
         }
         request_delay
     }
@@ -577,7 +578,7 @@ impl Connection {
         unsafe {
             xcb::xcb_grab_key(self.data,
                               pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
-                              grab_window.raw(),
+                              grab_window.as_window_int(),
                               modifiers.bits(),
                               keycode.data(),
                               pointer_mode as input::pointer_mode::PointerModeInt,

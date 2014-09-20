@@ -157,6 +157,7 @@ impl Screen {
 pub mod window {
     use xcb;
 
+    ///An integral type capable of representing a `Window`.
     pub type WindowInt = xcb::xcb_window_t;
 
     refined_type!{

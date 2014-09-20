@@ -159,7 +159,7 @@ pub mod window {
     pub type WindowInt = xcb::xcb_window_t;
 
     refined_type!{
-        #[deriving(Show, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable, Rand)]
+        #[deriving(Show, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable)]
         refined Window = WindowInt where |w: Window| ->
             non_null <=> w.data != xcb::XCB_WINDOW_NONE
     }

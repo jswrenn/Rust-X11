@@ -100,12 +100,46 @@ fn ident_from_meta_item(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaI
                 new_name
             }
             else {
-                for itm in vec.iter() {
-                    match itm.node {
+                for meta_itm in vec.iter() {
+                    match meta_itm.node {
                         ast::MetaWord(ref interned_str) => new_name.push_str(interned_str.get()),
+                        ast::MetaList(ref interned_str, ref vec) => {
+                            let convert: fn(&[Ascii]) -> String;
+                            let str = interned_str.get();
+                            if str == "CamelCase" {
+                                convert = snake_to_camel;
+                            }
+                            else if str == "snake_case" {
+                                convert = camel_to_snake;
+                            }
+                            else {
+                                let error_msg = format!("Invoking unknown identifier function {} in “change_ident_to”.", str);
+                                context.span_err(span, error_msg.as_slice());
+                                return new_name
+                            }
+                            let error_msg = format!("Invocation of {} in “change_ident_to” may only be done with exactly one identifier.", str);
+                            if vec.len() == 1 {
+                                let ref meta_itm = vec[0];
+                                match meta_itm.node {
+                                    ast::MetaWord(ref interned_string) => {
+                                        let str = interned_string.get();
+                                        let converted_string = unsafe { convert(str.to_ascii_nocheck()) };
+                                        new_name.push_str(converted_string.as_slice())
+                                    }
+                                    _ => {
+                                        context.span_err(span, error_msg.as_slice());
+                                        return new_name
+                                    }
+                                }
+                            }
+                            else {
+                                context.span_err(span, error_msg.as_slice());
+                                return new_name
+                            }
+                        }
                         _ => {
                             context.span_err(span,
-                                             "“change_ident_to” expects plain identifier expressions in its arguments. (Or arguments which become a plain identifier expression after concatenation.)");
+                                             "“change_ident_to” expects either an identifier, sequence of identifiers, an identifier applied to CamelCase/snake_case (i.e. “snake_case(identifier)”), or a sequence of applications of CamelCase/snake_case.");
                             return new_name
                         }
                     }
@@ -145,3 +179,55 @@ fn expand_change_ident_to(context: &mut ExtCtxt, span: Span, metaitem: &ast::Met
         }
     }
 }
+
+
+//These two conversion functions are intentionally simple and make assumptions
+//suited for their specific use cases in this file.
+fn snake_to_camel(xs: &[Ascii]) -> String {
+    let mut i = xs.iter();
+    let mut result = String::with_capacity(i.len());
+    match i.next() {
+        None => (),
+        Some(c) => {
+            result.push_char(c.to_uppercase().to_char());
+            let mut last_was_underscore = false;
+            for x in i {
+                if *x == unsafe { '_'.to_ascii_nocheck() } {
+                    last_was_underscore = true
+                }
+                else {
+                    if last_was_underscore {
+                        last_was_underscore = false;
+                        result.push_char(x.to_uppercase().to_char())
+                    }
+                    else {
+                        result.push_char(x.to_char())
+                    }
+                }
+            }
+        }
+    }
+    result
+}
+
+fn camel_to_snake(xs: &[Ascii]) -> String {
+    let mut i = xs.iter();
+    let mut result = String::with_capacity(i.len());
+    match i.next() {
+        None => (),
+        Some(c) => {
+            result.push_char(c.to_lowercase().to_char());
+            for x in i {
+                if x.is_uppercase() {
+                    result.push_char('_');
+                    result.push_char(x.to_lowercase().to_char())
+                }
+                else {
+                    result.push_char(x.to_char())
+                }
+            }
+        }
+    }
+    result
+}
+

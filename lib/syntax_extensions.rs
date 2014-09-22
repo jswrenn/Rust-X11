@@ -29,44 +29,48 @@ fn expand_method_modifiers(context: &mut ExtCtxt, span: Span, metaitem: &ast::Me
                 ast::ItemImpl(ref generics, ref maybe_trait, ref ty_ptr, ref impl_items) => {
                     let mut new_impl_items = Vec::with_capacity(impl_items.len());
                     for impl_item in impl_items.iter() {
-                        let ast::MethodImplItem(ref ptr) = *impl_item;
-                        let ref old_method = *ptr;
-                        let mut new_attrs: Vec<ast::Attribute> = Vec::with_capacity(old_method.attrs.len());
-                        match old_method.node {
-                            ast::MethDecl(old_ident, ref generics, abi, ref explicit_self,
-                                          fn_style, ref decl, ref block, vis) => {
-                                let mut new_name = old_ident.name;
-                                for attr in old_method.attrs.iter() {
-                                    match attr.node.value.node {
-                                        ast::MetaList(ref interned_str, _) => {
-                                            if change_ident_str == *interned_str {
-                                                new_name = token::intern(ident_from_meta_item(context,
-                                                                                              span,
-                                                                                              &*attr.node.value).as_slice());
-                                            }
-                                            else {
-                                                new_attrs.push(attr.clone());
+                        match *impl_item {
+                            ast::MethodImplItem(ref ptr) => {
+                                let ref old_method = *ptr;
+                                let mut new_attrs: Vec<ast::Attribute> = Vec::with_capacity(old_method.attrs.len());
+                                match old_method.node {
+                                    ast::MethDecl(old_ident, ref generics, abi, ref explicit_self,
+                                                  fn_style, ref decl, ref block, vis) => {
+                                        let mut new_name = old_ident.name;
+                                        for attr in old_method.attrs.iter() {
+                                            match attr.node.value.node {
+                                                ast::MetaList(ref interned_str, _) => {
+                                                    if change_ident_str == *interned_str {
+                                                        new_name = token::intern(ident_from_meta_item(context,
+                                                                                                      span,
+                                                                                                      &*attr.node.value).as_slice());
+                                                    }
+                                                    else {
+                                                        new_attrs.push(attr.clone());
+                                                    }
+                                                }
+                                                _ => new_attrs.push(attr.clone())
                                             }
                                         }
-                                        _ => new_attrs.push(attr.clone())
+                                        let new_method = Ptr(ast::Method {
+                                            attrs: new_attrs,
+                                            id: old_method.id.clone(),
+                                            span: old_method.span.clone(),
+                                            node: ast::MethDecl(ast::Ident {
+                                                                    name: new_name,
+                                                                    ctxt: old_ident.ctxt.clone()
+                                                                  },
+                                                                  generics.clone(), abi, explicit_self.clone(),
+                                                                  fn_style, decl.clone(), block.clone(), vis)
+                                        });
+                                        let new_impl_item = ast::MethodImplItem(new_method);
+                                        new_impl_items.push(new_impl_item);
                                     }
+                                    //FIXME: This case should be handled eventually.
+                                    ast::MethMac(..) => fail!("Handling of macros in method position not yet implemented by “method_modifiers”.")
                                 }
-                                let new_method = Ptr(ast::Method {
-                                    attrs: new_attrs,
-                                    id: old_method.id.clone(),
-                                    span: old_method.span.clone(),
-                                    node: ast::MethDecl(ast::Ident {
-                                                            name: new_name,
-                                                            ctxt: old_ident.ctxt.clone()
-                                                          },
-                                                          generics.clone(), abi, explicit_self.clone(),
-                                                          fn_style, decl.clone(), block.clone(), vis)
-                                });
-                                let new_impl_item = ast::MethodImplItem(new_method);
-                                new_impl_items.push(new_impl_item);
                             }
-                            //FIXME: This case should be handled eventually.
-                            ast::MethMac(..) => fail!("Handling of macros in method position not yet implemented by “method_modifiers”.")
+                            ref some_impl_item @ _ => new_impl_items.push(some_impl_item.clone())
                         }
                     }
                     Ptr(ast::Item {

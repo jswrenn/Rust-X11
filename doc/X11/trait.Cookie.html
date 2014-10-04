@@ -44,15 +44,15 @@
 <h1 class='fqn'><div class='in-band'>Trait <a href='index.html'>X11</a>::<wbr><a class='trait' href=''>Cookie</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-22831' href='../src/X11/src/X11.rs.html#225-227'>[src]</a></div></h1>
+        </span><a id='src-22959' href='../src/X11/src/X11.rs.html#270-272'>[src]</a></div></h1>
 <pre class='rust trait'>pub trait Cookie&lt;'a, R: <a class='trait' href='../X11/trait.Reply.html' title='X11::Reply'>Reply</a>&gt;: <a class='trait' href='http://doc.rust-lang.org/master/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> {
-    fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;;
+    fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='enum' href='http://doc.rust-lang.org/master/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;;
 }</pre><div class='docblock'><p>Implementors of this trait represent a pending reply from the X server made via an asynchronous
 request.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.wait_for_reply' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;</code></h3></div>
+        <h3 id='tymethod.wait_for_reply' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#tymethod.wait_for_reply' class='fnname'>wait_for_reply</a>(self) -&gt; <a class='enum' href='http://doc.rust-lang.org/master/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;R, <a class='struct' href='../X11/struct.RequestError.html' title='X11::RequestError'>RequestError</a>&gt;</code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     <li><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;'a&gt; <a class='trait' href='../X11/trait.Cookie.html' title='X11::Cookie'>Cookie</a>&lt;'a, <a class='struct' href='../X11/window_geometry/struct.Reply.html' title='X11::window_geometry::Reply'>Reply</a>&gt; for <a class='struct' href='../X11/window_geometry/struct.Cookie.html' title='X11::window_geometry::Cookie'>Cookie</a>&lt;'a&gt;</code></li>

@@ -6,25 +6,28 @@ extern crate syntax;
 extern crate rustc;
 
 use syntax::ast;
-use syntax::codemap::Span;
+use syntax::codemap::{Span, Spanned};
+use syntax::fold::Folder;
+use syntax::parse;
 use syntax::parse::token;
 use syntax::parse::token::get_name;
-use syntax::ext::base::{ItemModifier, ExtCtxt};
+use syntax::print::pprust;
+use syntax::ext::base::{DummyResult, ExtCtxt, ItemModifier, MacExpr, MacResult};
 use syntax::ptr::P as Ptr;
 
 #[plugin_registrar]
 pub fn registrar(reg: &mut rustc::plugin::Registry) {
   reg.register_syntax_extension(token::intern("change_ident_to"),
                                 ItemModifier(box expand_change_ident_to));
-  reg.register_syntax_extension(token::intern("method_modifiers"),
-                                ItemModifier(box expand_method_modifiers));
+  reg.register_syntax_extension(token::intern("inner_attributes"),
+                                ItemModifier(box expand_inner_attributes));
+  reg.register_macro("CamelCase", expand_camel_case)
 }
 
-fn expand_method_modifiers(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaItem,
+fn expand_inner_attributes(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaItem,
                            item: Ptr<ast::Item>) -> Ptr<ast::Item> {
     match metaitem.node {
         ast::MetaWord(..) => {
-            let change_ident_str = get_name(token::intern("change_ident_to"));
             match item.node {
                 ast::ItemImpl(ref generics, ref maybe_trait, ref ty_ptr, ref impl_items) => {
                     let mut new_impl_items = Vec::with_capacity(impl_items.len());
@@ -32,34 +35,15 @@ fn expand_method_modifiers(context: &mut ExtCtxt, span: Span, metaitem: &ast::Me
                         match *impl_item {
                             ast::MethodImplItem(ref ptr) => {
                                 let ref old_method = *ptr;
-                                let mut new_attrs: Vec<ast::Attribute> = Vec::with_capacity(old_method.attrs.len());
                                 match old_method.node {
                                     ast::MethDecl(old_ident, ref generics, abi, ref explicit_self,
                                                   fn_style, ref decl, ref block, vis) => {
-                                        let mut new_name = old_ident.name;
-                                        for attr in old_method.attrs.iter() {
-                                            match attr.node.value.node {
-                                                ast::MetaList(ref interned_str, _) => {
-                                                    if change_ident_str == *interned_str {
-                                                        new_name = token::intern(ident_from_meta_item(context,
-                                                                                                      span,
-                                                                                                      &*attr.node.value).as_slice());
-                                                    }
-                                                    else {
-                                                        new_attrs.push(attr.clone());
-                                                    }
-                                                }
-                                                _ => new_attrs.push(attr.clone())
-                                            }
-                                        }
+                                        let (new_name, new_attrs) = new_name_and_attrs(context, span, old_ident.name, &old_method.attrs);
                                         let new_method = Ptr(ast::Method {
                                             attrs: new_attrs,
                                             id: old_method.id.clone(),
                                             span: old_method.span.clone(),
-                                            node: ast::MethDecl(ast::Ident {
-                                                                    name: new_name,
-                                                                    ctxt: old_ident.ctxt.clone()
-                                                                  },
+                                            node: ast::MethDecl(ast::Ident::new(new_name),
                                                                   generics.clone(), abi, explicit_self.clone(),
                                                                   fn_style, decl.clone(), block.clone(), vis)
                                         });
@@ -67,32 +51,73 @@ fn expand_method_modifiers(context: &mut ExtCtxt, span: Span, metaitem: &ast::Me
                                         new_impl_items.push(new_impl_item);
                                     }
                                     //FIXME: This case should be handled eventually.
-                                    ast::MethMac(..) => fail!("Handling of macros in method position not yet implemented by “method_modifiers”.")
+                                    ast::MethMac(..) => fail!("Handling of macros in method position not yet implemented by “inner_attributes”.")
                                 }
                             }
                             ref some_impl_item @ _ => new_impl_items.push(some_impl_item.clone())
                         }
                     }
                     Ptr(ast::Item {
+                        node:  ast::ItemImpl(generics.clone(), maybe_trait.clone(), ty_ptr.clone(), new_impl_items),
+                        .. (*item).clone()
+                    })
+                }
+                ast::ItemEnum(ref enum_def, ref generics) => {
+                    let mut new_enum_def = ast::EnumDef { variants: Vec::with_capacity(enum_def.variants.len()) };
+                    for old_variant_ptr in enum_def.variants.iter() {
+                        let ref old_variant = old_variant_ptr.node;
+                        let (new_name, new_attrs) = new_name_and_attrs(context, span, old_variant.name.name, &old_variant.attrs);
+                        let new_variant_ptr = Ptr(Spanned {
+                            node: ast::Variant_ {
+                                name: ast::Ident::new(new_name),
+                                attrs: new_attrs,
+                                .. old_variant.clone()
+                            },
+                            span: old_variant_ptr.span
+                        });
+                        new_enum_def.variants.push(new_variant_ptr);
+                    }
+                    Ptr(ast::Item {
                         ident: item.ident,
                         attrs: item.attrs.clone(),
                         id:    item.id,
-                        node:  ast::ItemImpl(generics.clone(), maybe_trait.clone(), ty_ptr.clone(), new_impl_items),
+                        node:  ast::ItemEnum(new_enum_def, generics.clone()),
                         vis:   item.vis,
                         span:  item.span
                     })
                 }
                 _ => {
-                    context.span_err(span, "“method_modifiers” expects an item impl.");
+                    context.span_err(span, "“inner_attributes” does not handle this type of item.");
                     item.clone()
                 }
             }
         }
         _ => {
-            context.span_err(span, "“method_modifiers” is used without arguments.");
+            context.span_err(span, "“inner_attributes” is used without arguments.");
             item
         }
     }
+}
+
+fn new_name_and_attrs(context: &mut ExtCtxt, span: Span, old_name: ast::Name, old_attrs: &Vec<ast::Attribute>) -> (ast::Name, Vec<ast::Attribute>) {
+    let change_ident_str = get_name(token::intern("change_ident_to"));
+    let mut new_name = old_name;
+    let mut new_attrs = Vec::with_capacity(old_attrs.len());
+    for attr in old_attrs.iter() {
+        match attr.node.value.node {
+            ast::MetaList(ref interned_str, _) => {
+                if change_ident_str == *interned_str {
+                    new_name = token::intern(ident_from_meta_item(context, span, &*attr.node.value).as_slice());
+                }
+                else {
+                    new_attrs.push(attr.clone())
+                }
+            }
+            _ => new_attrs.push(attr.clone())
+        }
+    }
+    new_attrs.shrink_to_fit();
+    (new_name, new_attrs)
 }
 
 fn ident_from_meta_item(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaItem) -> String {
@@ -160,30 +185,54 @@ fn ident_from_meta_item(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaI
 }
 
 fn expand_change_ident_to(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaItem,
-                          item: Ptr<ast::Item>) -> Ptr<ast::Item> {
+                          old_item: Ptr<ast::Item>) -> Ptr<ast::Item> {
     let new_name = ident_from_meta_item(context, span, metaitem);
-    match item.node {
-        ast::ItemFn(..) => {
-            let new_item = Ptr(ast::Item {
-                ident: ast::Ident {
-                           name: token::intern(new_name.as_slice()),
-                           ctxt: ast::EMPTY_CTXT
-                       },
-                attrs: item.attrs.clone(),
-                id: item.id.clone(),
-                node: item.node.clone(),
-                vis: item.vis.clone(),
-                span: item.span.clone()
-            });
-            new_item
+    let new_item = Ptr(ast::Item {
+        ident: ast::Ident::new(token::intern(new_name.as_slice())),
+        attrs: old_item.attrs.clone(),
+        id: old_item.id.clone(),
+        node: old_item.node.clone(),
+        vis: old_item.vis.clone(),
+        span: old_item.span.clone()
+    });
+    new_item
+}
+
+fn expand_camel_case(context: &mut ExtCtxt, _: Span, tokens: &[ast::TokenTree]) -> Box<MacResult + 'static> {
+    let mut parser = parse::new_parser_from_tts(context.parse_sess(), context.cfg(), Vec::from_slice(tokens));
+    let expr = context.expander().fold_expr(parser.parse_expr());
+    match expr.node {
+        ast::ExprPath(ref old_path) => {
+            let mut new_segments = Vec::with_capacity(old_path.segments.len());
+            for old_segment in old_path.segments.iter() {
+                let new_str = snake_to_camel(unsafe {old_segment.identifier.as_str().to_ascii_nocheck()});
+                let new_ident = ast::Ident::new(token::intern(new_str.as_slice()));
+                new_segments.push(
+                    ast::PathSegment {
+                        identifier: new_ident,
+                        lifetimes: old_segment.lifetimes.clone(),
+                        types: old_segment.types.clone()
+                    })
+            }
+            let new_path = ast::Path {
+                span: old_path.span,
+                global: old_path.global,
+                segments: new_segments
+            };
+            MacExpr::new(Ptr(
+                    ast::Expr {
+                        id: expr.id,
+                        node: ast::ExprPath(new_path),
+                        span: expr.span
+                }))
         }
         _ => {
-            context.span_err(span, "“change_ident_to” unimplemented for this kind of item.");
-            item
+            let err_msg = format!("Unsupported expression given to camel_case!: “{}”", pprust::expr_to_string(&*expr));
+            context.span_err(parser.span, err_msg.as_slice());
+            DummyResult::expr(parser.span)
         }
     }
 }
-
 
 //These two conversion functions are intentionally simple and make assumptions
 //suited for their specific use cases in this file.

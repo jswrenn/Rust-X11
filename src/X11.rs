@@ -31,44 +31,90 @@ macro_rules! assert_type_eq(
 )
 
 macro_rules! refined_type(
-    ($(#[$ATTRIBUTES:meta])*
+    ($(use $USING_IDS:ident);*;
+     $(#[$ATTRIBUTES:meta])*
      refined $A:ident = $B:ident where
          |$ID:ident:$C:ty| -> $($PROPERTIES:ident <=> $PREDICATES:expr),+) => (
-             $(#[$ATTRIBUTES])*
-             pub struct $A {
-                 data: $B
-             }
+             #[change_ident_to(snake_case($A))]
+             pub mod $A {
+                 $(use $USING_IDS);*;
 
-             #[method_modifiers]
-             impl $A {
-                 $(  #[change_ident_to(is_, $PROPERTIES)]
-                     pub fn $PROPERTIES($ID: $C) -> bool { $PREDICATES }
-                  )+
-                 pub fn invariant($ID: $C) -> bool {
-                     and_all!($($PREDICATES)+)
-                 }
-                 ///Construct by assuming `data` satifies the invariant.
-                 pub unsafe fn assume(data: $B) -> $A {
-                     let val = $A { data: data };
-                     //Assuming should be faster but not difficult to debug.
-                     debug_assert!($A::invariant(val));
-                     val
-                 }
-                 ///Optionally construct depending on whether `data` satisfies the invariant.
-                 pub fn new(data: $B) -> Option<$A> {
-                     let val = $A { data: data };
-                     if $A::invariant(val) {
-                         None
-                     }
-                     else {
-                         Some(val)
-                     }
+                 $(#[$ATTRIBUTES])*
+                 pub struct $A {
+                     data: $B
                  }
 
-                 ///Get the underlying data to be free from invariant restrictions.
-                 #[inline]
-                 #[change_ident_to(as_, snake_case($B))]
-                 pub fn raw(&self) -> $B { self.data }
+                 pub enum InvariantStatus {
+                     Valid,
+                     Invalid(InvariantError)
+                 }
+
+                 #[inner_attributes]
+                 pub enum InvariantError {
+                     $(
+                         #[change_ident_to(Not, CamelCase($PROPERTIES))]
+                         $PROPERTIES
+                      ),+
+                 }
+
+                 #[inner_attributes]
+                 impl $A {
+
+                     $(  #[change_ident_to(is_, snake_case($PROPERTIES))]
+                         pub fn $PROPERTIES(&self) -> bool {
+                             let $ID: $C = self.data;
+                             $PREDICATES
+                         }
+                      )+
+                     ///Determine whether or not `self` respects the invariant.
+                     pub fn meets_invariant(&self) -> bool {
+                         let $ID: $C = self.data;
+                         and_all!($($PREDICATES)+)
+                     }
+                     ///Determine whether or not `self` respects the invariant,
+                     ///and if not, return the first error found.
+                     pub fn test_invariant(&self) -> InvariantStatus {
+                         let $ID: $C = self.data;
+                         $(
+                             if !$PREDICATES {
+                                 return Invalid(CamelCase!(concat_idents!(not_, $PROPERTIES)))
+                             }
+                         )+
+                             Valid
+                     }
+                     ///Construct by assuming `data` satifies the invariant.
+                     pub unsafe fn assume(data: $B) -> $A {
+                         let val = $A { data: data };
+                         //Assuming should be faster but not difficult to debug.
+                         debug_assert!(val.meets_invariant());
+                         val
+                     }
+                     ///Optionally construct depending on whether `data` satisfies the invariant.
+                     pub fn new(data: $B) -> Option<$A> {
+                         let val = $A { data: data };
+                         if val.meets_invariant() {
+                             Some(val)
+                         }
+                         else {
+                             None
+                         }
+                     }
+
+                     ///Optionally construct depending on whether `data` satisfies the invariant,
+                     ///and if not, return the first error found.
+                     pub fn new_or_err(data: $B) -> Result<$A, InvariantError> {
+                         let val = $A { data: data };
+                         match val.test_invariant() {
+                             Valid => Ok(val),
+                             Invalid(error) => Err(error)
+                         }
+                     }
+
+                     ///Get the underlying data to be free from invariant restrictions.
+                     #[inline]
+                     #[change_ident_to(as_, snake_case($B))]
+                     pub fn raw(&self) -> $B { self.data }
+                 }
              }
     );
 )
@@ -154,18 +200,17 @@ impl Screen {
     }
 }
 
-pub mod window {
+///An integral type capable of representing a `Window`.
+pub type WindowInt = xcb::xcb_window_t;
+
+refined_type!{
+    use WindowInt;
     use xcb;
 
-    ///An integral type capable of representing a `Window`.
-    pub type WindowInt = xcb::xcb_window_t;
-
-    refined_type!{
-        #[deriving(Show, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable)]
-        refined Window = WindowInt where |w: Window| ->
-            non_null <=> w.data != xcb::XCB_WINDOW_NONE
-    }
-
+    #[deriving(Show, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable)]
+    refined Window = WindowInt where |n: WindowInt| ->
+        non_null <=> n != xcb::XCB_WINDOW_NONE,
+        within_upper_bound <=> n <= (1 << 29) - 1
 }
 
 pub struct RequestError {

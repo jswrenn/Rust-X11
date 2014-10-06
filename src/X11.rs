@@ -511,7 +511,7 @@ impl Connection {
     ///Connects to the X server specified by the $DISPLAY environment variable (if $DISPLAY
     ///can be parsed).
     pub fn new() -> Result<Connection, ConnectionError> {
-        Connection::new_impl(std::ptr::mut_null())
+        Connection::new_impl(std::ptr::null_mut())
     }
 
     ///Does the same as new() but also returns the default Screen if one exists.
@@ -810,8 +810,8 @@ pub mod background_pixmap {
         data: u32
     }
 
-    static none: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_NONE };
-    static parent_relative: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_PARENT_RELATIVE };
+    static NONE: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_NONE };
+    static PARENT_RELATIVE: BackgroundPixmap = BackgroundPixmap { data: xcb::XCB_BACK_PIXMAP_PARENT_RELATIVE };
 
     impl BackgroundPixmap {
         #[inline]
@@ -819,14 +819,14 @@ pub mod background_pixmap {
             BackgroundPixmap { data: n }
         }
         #[inline]
-        pub fn is_pixmap(&self) -> bool { (*self != self::none) && (*self != self::parent_relative) }
+        pub fn is_pixmap(&self) -> bool { (*self != self::NONE) && (*self != self::PARENT_RELATIVE) }
         #[inline]
         pub fn as_u32(&self) -> u32 { self.data }
     }
 
     impl std::default::Default for BackgroundPixmap {
         #[inline]
-        fn default() -> BackgroundPixmap { self::none }
+        fn default() -> BackgroundPixmap { self::NONE }
     }
 
 }
@@ -840,20 +840,20 @@ pub mod border_pixmap {
         data: u32
     }
 
-    static copy_from_parent: BorderPixmap = BorderPixmap { data: xcb::XCB_COPY_FROM_PARENT };
+    static COPY_FROM_PARENT: BorderPixmap = BorderPixmap { data: xcb::XCB_COPY_FROM_PARENT };
 
     impl BorderPixmap {
         #[inline]
         pub fn new(n: u32) -> BorderPixmap { BorderPixmap { data: n } }
         #[inline]
-        pub fn is_pixmap(&self) -> bool { *self != self::copy_from_parent }
+        pub fn is_pixmap(&self) -> bool { *self != self::COPY_FROM_PARENT }
         #[inline]
         pub fn as_u32(&self) -> u32 { self.data }
     }
 
     impl std::default::Default for BorderPixmap {
         #[inline]
-        fn default() -> BorderPixmap { self::copy_from_parent }
+        fn default() -> BorderPixmap { self::COPY_FROM_PARENT }
     }
 
 }

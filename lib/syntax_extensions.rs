@@ -12,15 +12,15 @@ use syntax::parse;
 use syntax::parse::token;
 use syntax::parse::token::get_name;
 use syntax::print::pprust;
-use syntax::ext::base::{DummyResult, ExtCtxt, ItemModifier, MacExpr, MacResult};
+use syntax::ext::base::{DummyResult, ExtCtxt, Modifier, MacExpr, MacResult};
 use syntax::ptr::P as Ptr;
 
 #[plugin_registrar]
 pub fn registrar(reg: &mut rustc::plugin::Registry) {
   reg.register_syntax_extension(token::intern("change_ident_to"),
-                                ItemModifier(box expand_change_ident_to));
+                                Modifier(box expand_change_ident_to));
   reg.register_syntax_extension(token::intern("inner_attributes"),
-                                ItemModifier(box expand_inner_attributes));
+                                Modifier(box expand_inner_attributes));
   reg.register_macro("CamelCase", expand_camel_case);
   reg.register_macro("snake_case", expand_snake_case);
 }
@@ -200,7 +200,7 @@ fn expand_change_ident_to(context: &mut ExtCtxt, span: Span, metaitem: &ast::Met
 }
 
 fn expand_path_transform(context: &mut ExtCtxt, span: Span, tokens: &[ast::TokenTree], convert: fn(&[Ascii]) -> String) -> Box<MacResult + 'static> {
-    let mut parser = parse::new_parser_from_tts(context.parse_sess(), context.cfg(), Vec::from_slice(tokens));
+    let mut parser = parse::new_parser_from_tts(context.parse_sess(), context.cfg(), tokens.to_vec());
     let expr = context.expander().fold_expr(parser.parse_expr());
     if !parser.eat(&token::EOF) {
         context.span_err(parser.span, "Expected a single expression.");
@@ -257,7 +257,7 @@ fn snake_to_camel(xs: &[Ascii]) -> String {
     match i.next() {
         None => (),
         Some(c) => {
-            result.push_char(c.to_uppercase().to_char());
+            result.push(c.to_uppercase().to_char());
             let mut last_was_underscore = false;
             for x in i {
                 if *x == unsafe { '_'.to_ascii_nocheck() } {
@@ -266,10 +266,10 @@ fn snake_to_camel(xs: &[Ascii]) -> String {
                 else {
                     if last_was_underscore {
                         last_was_underscore = false;
-                        result.push_char(x.to_uppercase().to_char())
+                        result.push(x.to_uppercase().to_char())
                     }
                     else {
-                        result.push_char(x.to_char())
+                        result.push(x.to_char())
                     }
                 }
             }
@@ -284,14 +284,14 @@ fn camel_to_snake(xs: &[Ascii]) -> String {
     match i.next() {
         None => (),
         Some(c) => {
-            result.push_char(c.to_lowercase().to_char());
+            result.push(c.to_lowercase().to_char());
             for x in i {
                 if x.is_uppercase() {
-                    result.push_char('_');
-                    result.push_char(x.to_lowercase().to_char())
+                    result.push('_');
+                    result.push(x.to_lowercase().to_char())
                 }
                 else {
-                    result.push_char(x.to_char())
+                    result.push(x.to_char())
                 }
             }
         }

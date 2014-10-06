@@ -21,7 +21,8 @@ pub fn registrar(reg: &mut rustc::plugin::Registry) {
                                 ItemModifier(box expand_change_ident_to));
   reg.register_syntax_extension(token::intern("inner_attributes"),
                                 ItemModifier(box expand_inner_attributes));
-  reg.register_macro("CamelCase", expand_camel_case)
+  reg.register_macro("CamelCase", expand_camel_case);
+  reg.register_macro("snake_case", expand_snake_case);
 }
 
 fn expand_inner_attributes(context: &mut ExtCtxt, span: Span, metaitem: &ast::MetaItem,
@@ -198,14 +199,18 @@ fn expand_change_ident_to(context: &mut ExtCtxt, span: Span, metaitem: &ast::Met
     new_item
 }
 
-fn expand_camel_case(context: &mut ExtCtxt, _: Span, tokens: &[ast::TokenTree]) -> Box<MacResult + 'static> {
+fn expand_path_transform(context: &mut ExtCtxt, span: Span, tokens: &[ast::TokenTree], convert: fn(&[Ascii]) -> String) -> Box<MacResult + 'static> {
     let mut parser = parse::new_parser_from_tts(context.parse_sess(), context.cfg(), Vec::from_slice(tokens));
     let expr = context.expander().fold_expr(parser.parse_expr());
+    if !parser.eat(&token::EOF) {
+        context.span_err(parser.span, "Expected a single expression.");
+        return DummyResult::expr(span)
+    }
     match expr.node {
         ast::ExprPath(ref old_path) => {
             let mut new_segments = Vec::with_capacity(old_path.segments.len());
             for old_segment in old_path.segments.iter() {
-                let new_str = snake_to_camel(unsafe {old_segment.identifier.as_str().to_ascii_nocheck()});
+                let new_str = convert(unsafe {old_segment.identifier.as_str().to_ascii_nocheck()});
                 let new_ident = ast::Ident::new(token::intern(new_str.as_slice()));
                 new_segments.push(
                     ast::PathSegment {
@@ -229,9 +234,19 @@ fn expand_camel_case(context: &mut ExtCtxt, _: Span, tokens: &[ast::TokenTree]) 
         _ => {
             let err_msg = format!("Unsupported expression given to camel_case!: “{}”", pprust::expr_to_string(&*expr));
             context.span_err(parser.span, err_msg.as_slice());
-            DummyResult::expr(parser.span)
+            DummyResult::expr(span)
         }
     }
+}
+
+#[inline]
+fn expand_camel_case(context: &mut ExtCtxt, span: Span, tokens: &[ast::TokenTree]) -> Box<MacResult + 'static> {
+    expand_path_transform(context, span, tokens, snake_to_camel)
+}
+
+#[inline]
+fn expand_snake_case(context: &mut ExtCtxt, span: Span, tokens: &[ast::TokenTree]) -> Box<MacResult + 'static> {
+    expand_path_transform(context, span, tokens, camel_to_snake)
 }
 
 //These two conversion functions are intentionally simple and make assumptions

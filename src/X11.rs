@@ -30,6 +30,34 @@ macro_rules! assert_type_eq(
         );
 )
 
+macro_rules! new_type(
+    ($(#[$ATTRIBUTES:meta])*
+     type $A:ident = $B:ty) => (
+         $(#[$ATTRIBUTES])*
+         pub struct $A {
+             data: $B
+         }
+
+         impl $A {
+             #[inline]
+             pub fn new(data: $B) -> $A {
+                 $A { data: data }
+             }
+             ///Returns the underlying data in `self`.
+             #[inline]
+             pub fn as_raw_data(&self) -> $B {
+                 self.data
+             }
+
+             ///Returns a reference to the underlying data in `self`.
+             #[inline]
+             pub fn as_raw_ref(&self) -> &$B {
+                 &self.data
+             }
+         }
+    );
+)
+
 macro_rules! refined_type(
     ($(use $USING_IDS:ident);*;
      $(#[$ATTRIBUTES:meta])*
@@ -184,12 +212,9 @@ impl<'a> Setup<'a> {
     }
 }
 
-//This is like a Haskell newtype.
-//Adding/removing/changing fields invalidates code which transmutes between the underlying type
-//and the struct.
-#[deriving(Show)]
-pub struct Screen {
-    data: xcb::xcb_screen_t
+new_type!{
+    #[deriving(Show)]
+    type Screen = xcb::xcb_screen_t
 }
 
 impl Screen {
@@ -213,13 +238,11 @@ refined_type!{
         within_upper_bound <=> n <= (1 << 29) - 1
 }
 
-pub struct RequestError {
-    data: *mut xcb::xcb_generic_error_t
-}
+new_type!{type RequestError = *mut xcb::xcb_generic_error_t}
 
 impl Drop for RequestError {
     fn drop(&mut self) {
-        unsafe { libc::free(self.data as *mut libc::c_void) }
+        unsafe { libc::free(self.as_raw_data() as *mut libc::c_void) }
     }
 }
 
@@ -283,11 +306,11 @@ macro_rules! impl_wait_for_reply(
             //If the destructor for the cookie ran, then the reply would be freed.
             unsafe { std::mem::forget(self) }
             if reply.is_null() {
-                Err(RequestError { data: error })
+                Err(RequestError::new(error))
             }
             else {
                 debug_assert!(error.is_null(), "The pointer to the reply was nonnull but there is still a RequestError.")
-                Ok($ReplyT { data: reply })
+                Ok($ReplyT::new(reply))
             }
         }
     );
@@ -400,14 +423,13 @@ pub mod window_geometry {
     }
 
     ///The reply from the X server holding the requested window's geometetrical information.
-    pub struct Reply {
-        data: *mut xcb::xcb_get_geometry_reply_t,
-    }
+    //FIXME Comment is broken for rustdoc.
+    new_type!{type Reply = *mut xcb::xcb_get_geometry_reply_t}
 
     impl Reply {
         ///All geometerical information of the requested Window.
         pub fn geometry(&self) -> WindowGeometry {
-            let reply = unsafe { *self.data };
+            let reply = unsafe { *self.as_raw_data() };
             let position = Coordinate { x: reply.x, y: reply.y };
             let size = RectangularSize { width: reply.width, height: reply.height };
             let border_width = reply.border_width;
@@ -415,19 +437,19 @@ pub mod window_geometry {
         }
         ///The position of the requested window.
         pub fn position(&self) -> Coordinate {
-            let reply = unsafe { *self.data };
+            let reply = unsafe { *self.as_raw_data() };
             Coordinate { x: reply.x, y: reply.y }
         }
 
         ///The size of the requested window.
         pub fn size(&self) -> RectangularSize {
-            let reply = unsafe { *self.data };
+            let reply = unsafe { *self.as_raw_data() };
             RectangularSize { width: reply.width, height: reply.height }
         }
 
         ///The size of the border around the requested window.
         pub fn border_width(&self) -> u16 {
-            unsafe { (*self.data).border_width }
+            unsafe { (*self.as_raw_data()).border_width }
         }
     }
 
@@ -460,9 +482,7 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     impl_cookie_destructor!{}
 
-    pub struct Reply {
-        data: *mut xcb::xcb_query_tree_reply_t
-    }
+    new_type!{type Reply = *mut xcb::xcb_query_tree_reply_t}
 
     impl Reply {
         pub fn children<'a>(&'a self) -> WindowChildren<'a> {
@@ -470,8 +490,8 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
                 WindowChildren {
                     xs: std::mem::transmute(
                             std::raw::Slice {
-                                data: xcb::xcb_query_tree_children(self.data as *const _) as *const xcb::xcb_window_t,
-                                len: xcb::xcb_query_tree_children_length(self.data as *const _) as uint
+                                data: xcb::xcb_query_tree_children(self.as_raw_data() as *const _) as *const xcb::xcb_window_t,
+                                len: xcb::xcb_query_tree_children_length(self.as_raw_data() as *const _) as uint
                             }
                         )
                 }

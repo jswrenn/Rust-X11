@@ -300,7 +300,7 @@ macro_rules! impl_wait_for_reply(
     ($reply_func:expr)                => (impl_wait_for_reply!($reply_func, Reply));
     ($reply_func:expr, $ReplyT:ident) => (
         fn wait_for_reply(self) -> Result<$ReplyT, RequestError> {
-            let mut error: *mut xcb::xcb_generic_error_t = std::ptr::mut_null();
+            let mut error: *mut xcb::xcb_generic_error_t = std::ptr::null_mut();
             let reply = unsafe { $reply_func(self.connection.data, self.data, &mut error) };
             //If a reply is successfully received, the destructor for the cookie *must* not run.
             //If the destructor for the cookie ran, then the reply would be freed.
@@ -724,31 +724,31 @@ impl WindowSubAttributeSet {
     pub fn to_array_for_attr(&self, window_attributes: WindowMainAttributeSet) -> [u32, ..7] {
         let mut i = 0;
         let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];
-        if window_attributes.intersects(background_pixmap) {
+        if window_attributes.intersects(BACKGROUND_PIXMAP) {
             result[i] = self.background_pixmap.as_u32();
             i += 1;
         }
-        if window_attributes.intersects(bit_gravity) {
+        if window_attributes.intersects(BIT_GRAVITY) {
             result[i] = self.bit_gravity as u32;
             i += 1;
         }
-        if window_attributes.intersects(win_gravity) {
+        if window_attributes.intersects(WIN_GRAVITY) {
             result[i] = self.win_gravity as u32;
             i += 1;
         }
-        if window_attributes.intersects(backing_store) {
+        if window_attributes.intersects(BACKING_STORE) {
             result[i] = self.backing_store as u32;
             i += 1;
         }
-        if window_attributes.intersects(event) {
+        if window_attributes.intersects(EVENT) {
             result[i] = self.event_set.bits();
             i += 1;
         }
-        if window_attributes.intersects(colormap) {
+        if window_attributes.intersects(COLORMAP) {
             result[i] = self.colormap_set.bits();
             i += 1;
         }
-        if window_attributes.intersects(cursor) {
+        if window_attributes.intersects(CURSOR) {
             result[i] = self.cursor_set.bits();
             i += 1;
         }
@@ -760,21 +760,21 @@ impl WindowSubAttributeSet {
 pub type WindowMainAttributeInt = xcb::xcb_cw_t;
 bitflags!{
     #[deriving(Show)] flags WindowMainAttributeSet: WindowMainAttributeInt {
-        static background_pixmap  = xcb::XCB_CW_BACK_PIXMAP,
-        static background_pixel   = xcb::XCB_CW_BACK_PIXEL,
-        static border_pixmap      = xcb::XCB_CW_BORDER_PIXMAP,
-        static border_pixel       = xcb::XCB_CW_BORDER_PIXEL,
-        static bit_gravity        = xcb::XCB_CW_BIT_GRAVITY,
-        static win_gravity        = xcb::XCB_CW_WIN_GRAVITY,
-        static backing_store      = xcb::XCB_CW_BACKING_STORE,
-        static backing_planes     = xcb::XCB_CW_BACKING_PLANES,
-        static backing_pixel      = xcb::XCB_CW_BACKING_PIXEL,
-        static override_reddirect = xcb::XCB_CW_OVERRIDE_REDIRECT,
-        static save_under         = xcb::XCB_CW_SAVE_UNDER,
-        static event              = xcb::XCB_CW_EVENT_MASK,
-        static dont_propagate     = xcb::XCB_CW_DONT_PROPAGATE,
-        static colormap           = xcb::XCB_CW_COLORMAP,
-        static cursor             = xcb::XCB_CW_CURSOR
+        const BACKGROUND_PIXMAP  = xcb::XCB_CW_BACK_PIXMAP,
+        const BACKGROUND_PIXEL   = xcb::XCB_CW_BACK_PIXEL,
+        const BORDER_PIXMAP      = xcb::XCB_CW_BORDER_PIXMAP,
+        const BORDER_PIXEL       = xcb::XCB_CW_BORDER_PIXEL,
+        const BIT_GRAVITY        = xcb::XCB_CW_BIT_GRAVITY,
+        const WIN_GRAVITY        = xcb::XCB_CW_WIN_GRAVITY,
+        const BACKING_STORE      = xcb::XCB_CW_BACKING_STORE,
+        const BACKING_PLANES     = xcb::XCB_CW_BACKING_PLANES,
+        const BACKING_PIXEL      = xcb::XCB_CW_BACKING_PIXEL,
+        const OVERRIDE_REDDIRECT = xcb::XCB_CW_OVERRIDE_REDIRECT,
+        const SAVE_UNDER         = xcb::XCB_CW_SAVE_UNDER,
+        const EVENT              = xcb::XCB_CW_EVENT_MASK,
+        const DONT_PROPAGATE     = xcb::XCB_CW_DONT_PROPAGATE,
+        const COLORMAP           = xcb::XCB_CW_COLORMAP,
+        const CURSOR             = xcb::XCB_CW_CURSOR
     }
 }
 
@@ -936,32 +936,32 @@ pub mod event {
     pub type EventInt = xcb::xcb_event_mask_t;
     bitflags!{
         #[deriving(Show)] flags EventSet: EventInt {
-            static no_event              = xcb::XCB_EVENT_MASK_NO_EVENT,
-            static key_press             = xcb::XCB_EVENT_MASK_KEY_PRESS,
-            static key_release           = xcb::XCB_EVENT_MASK_KEY_RELEASE,
-            static button_press          = xcb::XCB_EVENT_MASK_BUTTON_PRESS,
-            static button_release        = xcb::XCB_EVENT_MASK_BUTTON_RELEASE,
-            static enter_window          = xcb::XCB_EVENT_MASK_ENTER_WINDOW,
-            static leave_window          = xcb::XCB_EVENT_MASK_LEAVE_WINDOW,
-            static pointer_motion        = xcb::XCB_EVENT_MASK_POINTER_MOTION,
-            static motion_hint           = xcb::XCB_EVENT_MASK_POINTER_MOTION_HINT,
-            static button_1_motion       = xcb::XCB_EVENT_MASK_BUTTON_1_MOTION,
-            static button_2_motion       = xcb::XCB_EVENT_MASK_BUTTON_2_MOTION,
-            static button_3_motion       = xcb::XCB_EVENT_MASK_BUTTON_3_MOTION,
-            static button_4_motion       = xcb::XCB_EVENT_MASK_BUTTON_4_MOTION,
-            static button_5_motion       = xcb::XCB_EVENT_MASK_BUTTON_5_MOTION,
-            static button_motion         = xcb::XCB_EVENT_MASK_BUTTON_MOTION,
-            static keymap_state          = xcb::XCB_EVENT_MASK_KEYMAP_STATE,
-            static exposure              = xcb::XCB_EVENT_MASK_EXPOSURE,
-            static visibility_change     = xcb::XCB_EVENT_MASK_VISIBILITY_CHANGE,
-            static structure_notify      = xcb::XCB_EVENT_MASK_STRUCTURE_NOTIFY,
-            static resize_redirect       = xcb::XCB_EVENT_MASK_RESIZE_REDIRECT,
-            static substructure_notify   = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY,
-            static substructure_redirect = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,
-            static focus_change          = xcb::XCB_EVENT_MASK_FOCUS_CHANGE,
-            static property_change       = xcb::XCB_EVENT_MASK_PROPERTY_CHANGE,
-            static color_map_change      = xcb::XCB_EVENT_MASK_COLOR_MAP_CHANGE,
-            static owner_grap_button     = xcb::XCB_EVENT_MASK_OWNER_GRAB_BUTTON
+            const NO_EVENT              = xcb::XCB_EVENT_MASK_NO_EVENT,
+            const KEY_PRESS             = xcb::XCB_EVENT_MASK_KEY_PRESS,
+            const KEY_RELEASE           = xcb::XCB_EVENT_MASK_KEY_RELEASE,
+            const BUTTON_PRESS          = xcb::XCB_EVENT_MASK_BUTTON_PRESS,
+            const BUTTON_RELEASE        = xcb::XCB_EVENT_MASK_BUTTON_RELEASE,
+            const ENTER_WINDOW          = xcb::XCB_EVENT_MASK_ENTER_WINDOW,
+            const LEAVE_WINDOW          = xcb::XCB_EVENT_MASK_LEAVE_WINDOW,
+            const POINTER_MOTION        = xcb::XCB_EVENT_MASK_POINTER_MOTION,
+            const MOTION_HINT           = xcb::XCB_EVENT_MASK_POINTER_MOTION_HINT,
+            const BUTTON_1_MOTION       = xcb::XCB_EVENT_MASK_BUTTON_1_MOTION,
+            const BUTTON_2_MOTION       = xcb::XCB_EVENT_MASK_BUTTON_2_MOTION,
+            const BUTTON_3_MOTION       = xcb::XCB_EVENT_MASK_BUTTON_3_MOTION,
+            const BUTTON_4_MOTION       = xcb::XCB_EVENT_MASK_BUTTON_4_MOTION,
+            const BUTTON_5_MOTION       = xcb::XCB_EVENT_MASK_BUTTON_5_MOTION,
+            const BUTTON_MOTION         = xcb::XCB_EVENT_MASK_BUTTON_MOTION,
+            const KEYMAP_STATE          = xcb::XCB_EVENT_MASK_KEYMAP_STATE,
+            const EXPOSURE              = xcb::XCB_EVENT_MASK_EXPOSURE,
+            const VISIBILITY_CHANGE     = xcb::XCB_EVENT_MASK_VISIBILITY_CHANGE,
+            const STRUCTURE_NOTIFY      = xcb::XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+            const RESIZE_REDIRECT       = xcb::XCB_EVENT_MASK_RESIZE_REDIRECT,
+            const SUBSTRUCTURE_NOTIFY   = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY,
+            const SUBSTRUCTURE_REDIRECT = xcb::XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,
+            const FOCUS_CHANGE          = xcb::XCB_EVENT_MASK_FOCUS_CHANGE,
+            const PROPERTY_CHANGE       = xcb::XCB_EVENT_MASK_PROPERTY_CHANGE,
+            const COLOR_MAP_CHANGE      = xcb::XCB_EVENT_MASK_COLOR_MAP_CHANGE,
+            const OWNER_GRAP_BUTTON     = xcb::XCB_EVENT_MASK_OWNER_GRAB_BUTTON
         }
     }
 }
@@ -971,7 +971,7 @@ pub mod colormap {
     pub type ColormapInt = xcb::xcb_colormap_enum_t;
     bitflags!{
         #[deriving(Show)] flags ColormapSet: ColormapInt {
-            static none = xcb::XCB_COLORMAP_NONE
+            const NONE = xcb::XCB_COLORMAP_NONE
         }
     }
 }
@@ -981,7 +981,7 @@ pub mod cursor {
     pub type CursorInt = xcb::xcb_cursor_enum_t;
     bitflags!{
         #[deriving(Show)] flags CursorSet: CursorInt {
-            static none = xcb::XCB_CURSOR_NONE
+            const NONE = xcb::XCB_CURSOR_NONE
         }
     }
 }
@@ -1000,15 +1000,15 @@ pub mod modkey {
     pub type ModkeyInt = u16;
     bitflags!{
         #[deriving(Show)] flags ModkeySet: ModkeyInt {
-            static shift     = xcb::XCB_MOD_MASK_SHIFT as ModkeyInt,
-            static lock      = xcb::XCB_MOD_MASK_LOCK as ModkeyInt,
-            static control   = xcb::XCB_MOD_MASK_CONTROL as ModkeyInt,
-            static mod_1     = xcb::XCB_MOD_MASK_1 as ModkeyInt,
-            static mod_2     = xcb::XCB_MOD_MASK_2 as ModkeyInt,
-            static mod_3     = xcb::XCB_MOD_MASK_3 as ModkeyInt,
-            static mod_4     = xcb::XCB_MOD_MASK_4 as ModkeyInt,
-            static mod_5     = xcb::XCB_MOD_MASK_5 as ModkeyInt,
-            static any       = xcb::XCB_MOD_MASK_ANY as ModkeyInt
+            const SHIFT     = xcb::XCB_MOD_MASK_SHIFT as ModkeyInt,
+            const LOCK      = xcb::XCB_MOD_MASK_LOCK as ModkeyInt,
+            const CONTROL   = xcb::XCB_MOD_MASK_CONTROL as ModkeyInt,
+            const MOD_1     = xcb::XCB_MOD_MASK_1 as ModkeyInt,
+            const MOD_2     = xcb::XCB_MOD_MASK_2 as ModkeyInt,
+            const MOD_3     = xcb::XCB_MOD_MASK_3 as ModkeyInt,
+            const MOD_4     = xcb::XCB_MOD_MASK_4 as ModkeyInt,
+            const MOD_5     = xcb::XCB_MOD_MASK_5 as ModkeyInt,
+            const ANY       = xcb::XCB_MOD_MASK_ANY as ModkeyInt
         }
 }
 

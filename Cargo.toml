@@ -1,0 +1,15 @@
+[package]
+
+name = "Rust-X11"
+version = "0.0.1"
+authors = ["Robert Murray McMahon <robert.murray.mcmahon@gmail.com>"]
+
+[lib]
+
+name = "X11"
+path = "src/X11.rs"
+doc = true
+
+[dependencies.syntax_extensions]
+
+path = "syntax_extensions"

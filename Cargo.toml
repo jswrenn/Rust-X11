@@ -9,6 +9,7 @@ authors = ["Robert Murray McMahon <robert.murray.mcmahon@gmail.com>"]
 name = "X11"
 path = "src/X11.rs"
 doc = true
+crate-type = ["rlib"]
 
 [dependencies.syntax_extensions]
 

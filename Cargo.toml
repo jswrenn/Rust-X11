@@ -22,3 +22,18 @@ path = "lib/new_type"
 [dependencies.refined_type]
 
 path = "lib/refined_type"
+
+[profile.dev]
+
+opt-level = 0
+debug = true
+
+[profile.release]
+
+opt-level = 3
+debug = true
+
+[profile.test]
+
+opt-level = 0
+debug = true

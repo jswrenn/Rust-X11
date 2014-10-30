@@ -12,4 +12,12 @@ doc = true
 
 [dependencies.syntax_extensions]
 
-path = "syntax_extensions"
+path = "lib/syntax_extensions"
+
+[dependencies.new_type]
+
+path = "lib/new_type"
+
+[dependencies.refined_type]
+
+path = "lib/refined_type"

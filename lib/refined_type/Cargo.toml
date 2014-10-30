@@ -1,0 +1,5 @@
+[package]
+
+name = "refined_type"
+version = "0.0.1"
+authors = ["Robert Murray McMahon <Robert.Murray.McMahon@gmail.com>"]

@@ -7,5 +7,4 @@ authors = ["Robert Murray McMahon <robert.murray.mcmahon@gmail.com>"]
 [lib]
 
 name = "syntax_extensions"
-path = "lib.rs"
 plugin = true

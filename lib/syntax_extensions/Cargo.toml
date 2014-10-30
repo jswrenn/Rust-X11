@@ -2,7 +2,7 @@
 
 name = "syntax_extensions"
 version = "0.0.1"
-authors = ["Robert Murray McMahon <robert.murray.mcmahon@gmail.com>"]
+authors = ["Robert Murray McMahon <Robert.Murray.McMahon@gmail.com>"]
 
 [lib]
 

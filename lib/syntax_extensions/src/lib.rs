@@ -52,7 +52,7 @@ fn expand_inner_attributes(context: &mut ExtCtxt, span: Span, metaitem: &ast::Me
                                         new_impl_items.push(new_impl_item);
                                     }
                                     //FIXME: This case should be handled eventually.
-                                    ast::MethMac(..) => fail!("Handling of macros in method position not yet implemented by “inner_attributes”.")
+                                    ast::MethMac(..) => panic!("Handling of macros in method position not yet implemented by “inner_attributes”.")
                                 }
                             }
                             ref some_impl_item @ _ => new_impl_items.push(some_impl_item.clone())
@@ -202,7 +202,7 @@ fn expand_change_ident_to(context: &mut ExtCtxt, span: Span, metaitem: &ast::Met
 fn expand_path_transform(context: &mut ExtCtxt, span: Span, tokens: &[ast::TokenTree], convert: fn(&[Ascii]) -> String) -> Box<MacResult + 'static> {
     let mut parser = parse::new_parser_from_tts(context.parse_sess(), context.cfg(), tokens.to_vec());
     let expr = context.expander().fold_expr(parser.parse_expr());
-    if !parser.eat(&token::EOF) {
+    if !parser.eat(&token::Eof) {
         context.span_err(parser.span, "Expected a single expression.");
         return DummyResult::expr(span)
     }

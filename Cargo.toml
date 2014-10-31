@@ -7,7 +7,6 @@ authors = ["Robert Murray McMahon <Robert.Murray.McMahon@gmail.com>"]
 [lib]
 
 name = "X11"
-path = "src/X11.rs"
 doc = true
 crate-type = ["rlib"]
 

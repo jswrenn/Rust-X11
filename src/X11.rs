@@ -528,7 +528,7 @@ impl Connection {
                               pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
                               grab_window.as_window_int(),
                               modifiers.bits(),
-                              keycode.data(),
+                              keycode.as_raw_data(),
                               pointer_mode as input::pointer_mode::PointerModeInt,
                               keyboard_mode as input::keyboard_mode::KeyboardModeInt
                              );
@@ -897,14 +897,9 @@ pub mod modkey {
 }
 
 pub type KeycodeInt = xcb::xcb_keycode_t;
+new_type!{
 #[deriving(Show)]
-pub struct Keycode {
-    data: KeycodeInt
-}
-
-impl Keycode {
-    #[inline]
-    pub fn data(&self) -> KeycodeInt { self.data }
+type Keycode = KeycodeInt
 }
 
 pub mod pointer_mode {

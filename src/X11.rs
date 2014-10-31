@@ -517,8 +517,7 @@ impl Connection {
     pub fn grab_key_chord<'a>(&'a self,
                               pointer_event_mode: input::PointerEventMode,
                               grab_window: Window,
-                              modifiers: input::ModkeySet,
-                              keycode: input::Keycode,
+                              key_with_modkey_set: input::KeyWithModkeySet,
                               pointer_mode: input::PointerMode,
                               keyboard_mode: input::KeyboardMode
                              ) -> RequestDelay<'a> {
@@ -527,8 +526,8 @@ impl Connection {
             xcb::xcb_grab_key(self.data,
                               pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
                               grab_window.as_window_int(),
-                              modifiers.bits(),
-                              keycode.as_raw_data(),
+                              key_with_modkey_set.modkey_set.bits(),
+                              key_with_modkey_set.keycode.as_raw_data(),
                               pointer_mode as input::pointer_mode::PointerModeInt,
                               keyboard_mode as input::keyboard_mode::KeyboardModeInt
                              );
@@ -900,6 +899,12 @@ pub type KeycodeInt = xcb::xcb_keycode_t;
 new_type!{
 #[deriving(Show)]
 type Keycode = KeycodeInt
+}
+
+///Represents the simultaneous keypress (chord) of a regular key and a number of modifier keys.
+pub struct KeyWithModkeySet {
+    pub keycode: Keycode,
+    pub modkey_set: ModkeySet
 }
 
 pub mod pointer_mode {

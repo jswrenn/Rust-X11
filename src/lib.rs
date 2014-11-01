@@ -95,9 +95,10 @@ impl<'a> Setup<'a> {
     }
 }
 
-new_type!{
-    #[deriving(Show)]
-    type Screen = xcb::xcb_screen_t
+pub type ScreenT = xcb::xcb_screen_t;
+#[new_type]
+pub struct Screen {
+    data: ScreenT
 }
 
 impl Screen {
@@ -121,11 +122,15 @@ refined_type!{
         within_upper_bound <=> n <= (1 << 29) - 1
 }
 
-new_type!{type RequestError = *mut xcb::xcb_generic_error_t}
+pub type RequestErrorT = *mut xcb::xcb_generic_error_t;
+#[new_type]
+pub struct RequestError {
+    data: RequestErrorT
+}
 
 impl Drop for RequestError {
     fn drop(&mut self) {
-        unsafe { libc::free(self.as_raw_data() as *mut libc::c_void) }
+        unsafe { libc::free(self.as_request_error_t() as *mut libc::c_void) }
     }
 }
 
@@ -305,14 +310,17 @@ pub mod window_geometry {
         pub fn border_width(&self) -> u16 { self.border_width_ }
     }
 
+    pub type ReplyT = *mut xcb::xcb_get_geometry_reply_t;
     ///The reply from the X server holding the requested window's geometetrical information.
-    //FIXME Comment is broken for rustdoc.
-    new_type!{type Reply = *mut xcb::xcb_get_geometry_reply_t}
+    #[new_type]
+    pub struct Reply {
+        data: ReplyT
+    }
 
     impl Reply {
         ///All geometerical information of the requested Window.
         pub fn geometry(&self) -> WindowGeometry {
-            let reply = unsafe { *self.as_raw_data() };
+            let reply = unsafe { *self.as_reply_t() };
             let position = Coordinate { x: reply.x, y: reply.y };
             let size = RectangularSize { width: reply.width, height: reply.height };
             let border_width = reply.border_width;
@@ -320,19 +328,19 @@ pub mod window_geometry {
         }
         ///The position of the requested window.
         pub fn position(&self) -> Coordinate {
-            let reply = unsafe { *self.as_raw_data() };
+            let reply = unsafe { *self.as_reply_t() };
             Coordinate { x: reply.x, y: reply.y }
         }
 
         ///The size of the requested window.
         pub fn size(&self) -> RectangularSize {
-            let reply = unsafe { *self.as_raw_data() };
+            let reply = unsafe { *self.as_reply_t() };
             RectangularSize { width: reply.width, height: reply.height }
         }
 
         ///The size of the border around the requested window.
         pub fn border_width(&self) -> u16 {
-            unsafe { (*self.as_raw_data()).border_width }
+            unsafe { (*self.as_reply_t()).border_width }
         }
     }
 
@@ -365,7 +373,11 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
 
     impl_cookie_destructor!{}
 
-    new_type!{type Reply = *mut xcb::xcb_query_tree_reply_t}
+    pub type ReplyT = *mut xcb::xcb_query_tree_reply_t;
+    #[new_type]
+    pub struct Reply {
+        data: ReplyT
+    }
 
     impl Reply {
         pub fn children<'a>(&'a self) -> WindowChildren<'a> {
@@ -373,8 +385,8 @@ use super::{Connection, Window, xcb, RequestDelay, RequestError, std, libc};
                 WindowChildren {
                     xs: std::mem::transmute(
                             std::raw::Slice {
-                                data: xcb::xcb_query_tree_children(self.as_raw_data() as *const _) as *const xcb::xcb_window_t,
-                                len: xcb::xcb_query_tree_children_length(self.as_raw_data() as *const _) as uint
+                                data: xcb::xcb_query_tree_children(self.as_reply_t() as *const _) as *const xcb::xcb_window_t,
+                                len: xcb::xcb_query_tree_children_length(self.as_reply_t() as *const _) as uint
                             }
                         )
                 }
@@ -528,7 +540,7 @@ impl Connection {
                               pointer_event_mode as input::pointer_event_mode::PointerEventModeInt,
                               grab_window.as_window_int(),
                               key_with_modkey_set.modkey_set.bits(),
-                              key_with_modkey_set.keycode.as_raw_data(),
+                              key_with_modkey_set.keycode.as_keycode_t(),
                               pointer_mode as input::pointer_mode::PointerModeInt,
                               keyboard_mode as input::keyboard_mode::KeyboardModeInt
                              );

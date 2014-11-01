@@ -3,3 +3,9 @@
 name = "new_type"
 version = "0.0.1"
 authors = ["Robert Murray McMahon <Robert.Murray.McMahon@gmail.com>"]
+
+[lib]
+
+name = "new_type"
+plugin = true
+crate-type = ["dylib"]

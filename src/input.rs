@@ -23,10 +23,11 @@ pub mod modkey {
 
 }
 
-pub type KeycodeInt = xcb::xcb_keycode_t;
-new_type!{
-#[deriving(Show)]
-type Keycode = KeycodeInt
+pub type KeycodeT = xcb::xcb_keycode_t;
+
+#[new_type]
+pub struct Keycode {
+    data: KeycodeT
 }
 
 ///Represents the simultaneous keypress (chord) of a regular key and a number of modifier keys.

@@ -21,80 +21,74 @@ pub fn registrar(reg: &mut rustc::plugin::Registry) {
 fn expand_new_type(context: &mut ExtCtxt, span: Span,
                    metaitem: &ast::MetaItem, item: &ast::Item, push: |Ptr<ast::Item>|) {
     if let ast::MetaWord(..) = metaitem.node {
-        if let ast::ItemStruct(ref structdef_ptr, ref generics) = item.node {
-            if !generics.is_type_parameterized() {
-                if let None = structdef_ptr.ctor_id {
-                    if structdef_ptr.fields.len() == 1 {
-                        let ref struct_field = structdef_ptr.fields[0].node;
-                        if let ast::NamedField(identifier, ast::Inherited) = struct_field.kind {
-                            let new_type = item.ident;
-                            let ref old_type = struct_field.ty;
-                            let new_type_source = new_type.to_source();
-                            let old_type_source = old_type.to_source();
-                            let old_type_str = unsafe {
-                                camel_to_snake(old_type_source.as_slice().to_ascii_nocheck())
-                            };
-                            let val_method_str = format!("as_{}", old_type_str);
-                            let old_type_name = context.parse_tts(old_type_str);
-                            let val_method_name = context.parse_tts(val_method_str.clone());
-                            let ref_method_name = context.parse_tts(format!("{}_ref", val_method_str));
-                            let val_method_comment_str = format!("Returns the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source);
-                            let val_method_comment_tokens = val_method_comment_str.as_slice().to_tokens(context);
-                            let val_method_comment = quote_tokens!(context, #[doc=$val_method_comment_tokens]);
-                            let ref_method_comment_str = format!("Returns a reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source);
-                            let ref_method_comment_tokens = ref_method_comment_str.as_slice().to_tokens(context);
-                            let ref_method_comment = quote_tokens!(context, #[doc=$ref_method_comment_tokens]);
-                            let maybe_item_impl = quote_item!(context,
-                                                              ///Automatically generated methods from
-                                                              ///`new_type` syntax extension attribute.
-                                                              impl $new_type {
-                                                                  #[inline]
-                                                                  pub fn new($old_type_name: $old_type) -> $new_type {
-                                                                      $new_type { $identifier: $old_type_name }
-                                                                  }
-                                                                  $val_method_comment
-                                                                  #[inline]
-                                                                  pub fn $val_method_name(&self) -> $old_type {
-                                                                      self.$identifier
-                                                                  }
+    } else {
+        context.span_err(span, "“new_type” is used without arguments.");
+        return;
+    }
+    let (structdef_ptr, generics) = if let ast::ItemStruct(ref structdef_ptr, ref generics) = item.node {
+        (structdef_ptr, generics)
+    } else {
+        context.span_err(span, "“new_type” is used on struct definitions only.");
+        return;
+    };
+    if generics.is_type_parameterized() {
+        context.span_err(span, "“new_type” is not used with type parameterized structs.");
+        return;
+    }
+    if let Some(..) = structdef_ptr.ctor_id {
+        context.span_err(span, "“new_type” is not used with tuple- or enum-like structs.");
+        return;
+    }
+    if structdef_ptr.fields.len() != 1 {
+        context.span_err(span, "“new_type” is used on structs with exactly one field.");
+        return;
+    }
+    let ref struct_field = structdef_ptr.fields[0].node;
+    let identifier = if let ast::NamedField(identifier, ast::Inherited) = struct_field.kind {
+        identifier
+    } else {
+        context.span_err(span, "“new_type” is used only structs with exactly one named private field.");
+        return;
+    };
+    let new_type = item.ident;
+    let ref old_type = struct_field.ty;
+    let new_type_source = new_type.to_source();
+    let old_type_source = old_type.to_source();
+    let old_type_str = unsafe {
+        camel_to_snake(old_type_source.as_slice().to_ascii_nocheck())
+    };
+    let val_method_str = format!("as_{}", old_type_str);
+    let old_type_name = context.parse_tts(old_type_str);
+    let val_method_name = context.parse_tts(val_method_str.clone());
+    let ref_method_name = context.parse_tts(format!("{}_ref", val_method_str));
+    let val_method_comment_str = format!("Returns the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source);
+    let val_method_comment_tokens = val_method_comment_str.as_slice().to_tokens(context);
+    let val_method_comment = quote_tokens!(context, #[doc=$val_method_comment_tokens]);
+    let ref_method_comment_str = format!("Returns a reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source);
+    let ref_method_comment_tokens = ref_method_comment_str.as_slice().to_tokens(context);
+    let ref_method_comment = quote_tokens!(context, #[doc=$ref_method_comment_tokens]);
+    let maybe_item_impl = quote_item!(context,
+                                      ///Automatically generated methods from
+                                      ///`new_type` syntax extension attribute.
+                                      impl $new_type {
+                                          #[inline]
+                                          pub fn new($old_type_name: $old_type) -> $new_type {
+                                              $new_type { $identifier: $old_type_name }
+                                          }
+                                          $val_method_comment
+                                          #[inline]
+                                          pub fn $val_method_name(&self) -> $old_type {
+                                              self.$identifier
+                                          }
 
-                                                                  $ref_method_comment
-                                                                  #[inline]
-                                                                  pub fn $ref_method_name(&self) -> &$old_type {
-                                                                      &self.$identifier
-                                                                  }
-                                                              }
-                                                             );
-                            if let Some(item_impl) = maybe_item_impl {
-                                push(item_impl)
-                            }
-                            else {
-                                panic!("Entered unexpected branch in expansion of “new_type” attribute.")
-                            }
-                        }
-                        else {
-                            context.span_err(span, "“new_type” is used only structs with exactly one named private field.")
-                        }
-                    }
-                    else {
-                        context.span_err(span, "“new_type” is used on structs with exactly one field.")
-                    }
-                }
-                else {
-                    context.span_err(span, "“new_type” is not used with tuple- or enum-like structs.")
-                }
-            }
-            else {
-                context.span_err(span, "“new_type” is not used with type parameterized structs.")
-            }
-        }
-        else {
-            context.span_err(span, "“new_type” is used on struct definitions only.")
-        }
-    }
-    else {
-        context.span_err(span, "“new_type” is used without arguments.")
-    }
+                                          $ref_method_comment
+                                          #[inline]
+                                          pub fn $ref_method_name(&self) -> &$old_type {
+                                              &self.$identifier
+                                          }
+                                      }
+                                     );
+    push(maybe_item_impl.expect("Entered unexpected branch in expansion of “new_type” attribute."))
 }
 
 //FIXME: Temporarily pasted and edited version from other file.

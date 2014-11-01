@@ -614,7 +614,7 @@ impl WindowSubAttributeSet {
         }
     }
 
-    #[allow(dead_assignment)]
+    #[allow(unused_assignments)]
     pub fn to_array_for_attr(&self, window_attributes: WindowMainAttributeSet) -> [u32, ..7] {
         let mut i = 0;
         let mut result: [u32, ..7] = [0, 0, 0, 0, 0, 0, 0];

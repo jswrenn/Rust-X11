@@ -47,7 +47,7 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     let identifier = if let ast::NamedField(identifier, ast::Inherited) = struct_field.kind {
         identifier
     } else {
-        context.span_err(span, "“new_type” is used only structs with exactly one named private field.");
+        context.span_err(span, "“new_type” is used only on structs with exactly one named private field.");
         return;
     };
     let new_type = item.ident;

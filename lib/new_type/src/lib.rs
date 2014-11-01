@@ -58,8 +58,9 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     let ref old_type = struct_field.ty;
     let new_type_source = new_type.to_source();
     let old_type_source = old_type.to_source();
-    let old_type_str = unsafe {
-        camel_to_snake(old_type_source.as_slice().to_ascii_nocheck())
+    let old_type_str = match type_to_ident_str(context, span, old_type.clone(), camel_to_snake) {
+        Some(str) => str,
+        None => return
     };
     let val_method_str = format!("as_{}", old_type_str);
     let old_type_name = context.parse_tts(old_type_str);
@@ -95,76 +96,88 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     push(maybe_item_impl.expect("Entered unexpected branch in expansion of “new_type” attribute."))
 }
 
-//FIXME: Temporarily pasted and edited version from other file.
-//I really don't like how this turned out. Hope to refactor or use a completely different technique
-//later.
+fn type_to_ident_str(context: &mut ExtCtxt, span: Span, type_: Ptr<ast::Ty>, format: fn(&[Ascii]) -> String) -> Option<String> {
+    let mut sub_type = &type_;
+    let mut result = String::new();
+    loop {
+        match sub_type.node {
+            ast::TyNil => {
+                result.push_str("Nil");
+                break
+            }
+            ast::TyBot => {
+                result.push_str("Bot");
+                break
+            }
+            ast::TyVec(ref ty) => {
+                result.push_str("Slice");
+                sub_type = ty
+            }
+            ast::TyFixedLengthVec(ref ty, ref expr) => {
+                let expr_str = expr.to_source();
+                result.push_str("Array");
+                result.push_str(expr_str.as_slice());
+                sub_type = ty
+            }
+            ast::TyPtr(ref mut_ty) => {
+                let ast::MutTy {
+                    ty: ref ty,
+                    mutbl: mutbl
+                } = *mut_ty;
+                result.push_str("Ptr");
+                if let ast::MutMutable = mutbl { result.push_str("Mut") }
+                sub_type = ty
+            }
+            ast::TyRptr(_, ref mut_ty) => {
+                let ast::MutTy {
+                    ty: ref ty,
+                    mutbl: mutbl
+                } = *mut_ty;
+                result.push_str("Ref");
+                if let ast::MutMutable = mutbl { result.push_str("Mut") }
+                sub_type = ty
+            }
+            ast::TyTup(ref vec) => {
+                result.push_str("Tup");
+                for ty in vec.iter() {
+                    if let Some(str) = type_to_ident_str(context, span, ty.clone(), format) {
+                        result.push_str(str.as_slice())
+                    }
+                }
+                break
+            }
+            ast::TyPath(ref path, _, _) => {
+                for segment in path.segments.iter() {
+                    result.push_str(segment.identifier.as_str())
+                }
+                break
+            }
+            ast::TyParen(ref ty) => sub_type = ty,
+            _ => {
+                context.span_err(span, "Unsupported type for automatic conversion to identifier.");
+                println!("{}", sub_type.node);
+                return None
+            }
+        }
+    }
+    Some(format(unsafe{result.to_ascii_nocheck()}))
+}
+
+//FIXME: Temporarily pasted version from other file.
 fn camel_to_snake(xs: &[Ascii]) -> String {
     let mut i = xs.iter();
     let mut result = String::with_capacity(i.len());
-    let mut global_path = false;
-    let mut already_have_one_underscore = false;
     match i.next() {
         None => (),
         Some(c) => {
-            if !c.is_alphanumeric() {
-                if *c == unsafe{'&'.to_ascii_nocheck()} {
-                    result.push_str("ref_");
-                    already_have_one_underscore = true
-                }
-                else if *c == unsafe{'*'.to_ascii_nocheck()} {
-                    result.push_str("ptr_");
-                    already_have_one_underscore = true
-                }
-                else if *c == unsafe{':'.to_ascii_nocheck()} {
-                    global_path = true;
-                    result.push('_');
-                    already_have_one_underscore = true
-                }
-                else if *c == unsafe{'\''.to_ascii_nocheck()} {
-                    result.push_str("lftm_");
-                    already_have_one_underscore = true
-                }
-                else {
-                    result.push('_');
-                    already_have_one_underscore = true;
-                }
-            }
-            else {
-                result.push(c.to_lowercase().to_char())
-            }
+            result.push(c.to_lowercase().to_char());
             for x in i {
-                let uppercase = x.is_uppercase();
-                if uppercase && !global_path {
-                    if !already_have_one_underscore { result.push('_') }
-                    result.push(x.to_lowercase().to_char());
-                    already_have_one_underscore = false
-                }
-                else if uppercase && global_path {
-                    global_path = false;
-                    result.push(x.to_lowercase().to_char());
-                    already_have_one_underscore = false
-                }
-                else if !x.is_alphanumeric() {
-                    if *x == unsafe{'*'.to_ascii_nocheck()} {
-                        result.push_str("ptr_");
-                        already_have_one_underscore = true
-                    }
-                    else if *x == unsafe{'&'.to_ascii_nocheck()} {
-                        result.push_str("ref_");
-                        already_have_one_underscore = true
-                    }
-                    else if *x == unsafe{'\''.to_ascii_nocheck()} {
-                        result.push_str("lftm_");
-                        already_have_one_underscore = true
-                    }
-                    else if !already_have_one_underscore {
-                        result.push('_');
-                        already_have_one_underscore = true
-                    }
+                if x.is_uppercase() {
+                    result.push('_');
+                    result.push(x.to_lowercase().to_char())
                 }
                 else {
-                    result.push(x.to_char());
-                    already_have_one_underscore = false
+                    result.push(x.to_char())
                 }
             }
         }

@@ -20,16 +20,19 @@ pub fn registrar(reg: &mut rustc::plugin::Registry) {
 
 fn expand_new_type(context: &mut ExtCtxt, span: Span,
                    metaitem: &ast::MetaItem, item: &ast::Item, push: |Ptr<ast::Item>|) {
-    if let ast::MetaWord(..) = metaitem.node {
-    } else {
-        context.span_err(span, "“new_type” is used without arguments.");
-        return;
+    match metaitem.node {
+        ast::MetaWord(..) => (), //intentionally empty
+        _ => {
+            context.span_err(span, "“new_type” is used without arguments.");
+            return;
+        }
     }
-    let (structdef_ptr, generics) = if let ast::ItemStruct(ref structdef_ptr, ref generics) = item.node {
-        (structdef_ptr, generics)
-    } else {
-        context.span_err(span, "“new_type” is used on struct definitions only.");
-        return;
+    let (structdef_ptr, generics) = match item.node {
+        ast::ItemStruct(ref structdef_ptr, ref generics) => (structdef_ptr, generics),
+        _ => {
+            context.span_err(span, "“new_type” is used on struct definitions only.");
+            return;
+        }
     };
     if generics.is_type_parameterized() {
         context.span_err(span, "“new_type” is not used with type parameterized structs.");
@@ -44,11 +47,12 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
         return;
     }
     let ref struct_field = structdef_ptr.fields[0].node;
-    let identifier = if let ast::NamedField(identifier, ast::Inherited) = struct_field.kind {
-        identifier
-    } else {
-        context.span_err(span, "“new_type” is used only on structs with exactly one named private field.");
-        return;
+    let identifier = match struct_field.kind {
+        ast::NamedField(identifier, ast::Inherited) => identifier,
+        _ => {
+            context.span_err(span, "“new_type” is used only on structs with exactly one named private field.");
+            return;
+        }
     };
     let new_type = item.ident;
     let ref old_type = struct_field.ty;

@@ -1,6 +1,6 @@
 #![crate_name = "new_type"]
 #![crate_type = "dylib"]
-#![feature(if_let, plugin_registrar, phase, macro_rules, quote)]
+#![feature(if_let, plugin_registrar, phase, quote)]
 
 extern crate syntax;
 extern crate rustc;

@@ -64,11 +64,25 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     };
     let old_type_name = token::str_to_ident(old_type_str.as_slice());
 
-    let val_method_name = token::str_to_ident(format!("as_{}", old_type_str).as_slice());
+    let val_method_str = format!("as_{}", old_type_str);
+    let val_method_name = token::str_to_ident(val_method_str.as_slice());
     let val_method_comment = make_comment(context, format!("Returns the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
+    let generic_as_comment = make_generic_comment(context, val_method_str.as_slice(), new_type.as_str());
 
-    let ref_method_name = token::str_to_ident(format!("as_{}_ref", old_type_str).as_slice());
+    let into_method_str = format!("into_{}", old_type_str);
+    let into_method_name = token::str_to_ident(into_method_str.as_slice());
+    let into_method_comment = make_comment(context, format!("Consumes the `{new}` and returns the underlying `{old}`", old=old_type_source, new=new_type_source));
+    let generic_into_comment = make_generic_comment(context, into_method_str.as_slice(), new_type.as_str());
+
+    let ref_method_str = format!("as_{}_ref", old_type_str);
+    let ref_method_name = token::str_to_ident(ref_method_str.as_slice());
     let ref_method_comment = make_comment(context, format!("Returns a reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
+    let generic_ref_comment = make_generic_comment(context, ref_method_str.as_slice(), new_type.as_str());
+
+    let mut_method_str = format!("as_{}_mut", old_type_str);
+    let mut_method_name = token::str_to_ident(mut_method_str.as_slice());
+    let mut_method_comment = make_comment(context, format!("Returns a mutable reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
+    let generic_mut_comment = make_generic_comment(context, mut_method_str.as_slice(), new_type.as_str());
 
     let maybe_item_impl = quote_item!(context,
                                       ///Automatically generated methods from
@@ -78,15 +92,49 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
                                           pub fn new($old_type_name: $old_type) -> $new_type {
                                               $new_type { $identifier: $old_type_name }
                                           }
+
                                           $val_method_comment
                                           #[inline]
                                           pub fn $val_method_name(&self) -> $old_type {
                                               self.$identifier
                                           }
+                                          $generic_as_comment
+                                          #[inline]
+                                          pub fn generic_as(&self) -> $old_type {
+                                              self.$identifier
+                                          }
+
+                                          $into_method_comment
+                                          #[inline]
+                                          pub fn $into_method_name(self) -> $old_type {
+                                              self.$identifier
+                                          }
+                                          $generic_into_comment
+                                          #[inline]
+                                          pub fn generic_into(self) -> $old_type {
+                                              self.$identifier
+                                          }
+
                                           $ref_method_comment
                                           #[inline]
                                           pub fn $ref_method_name(&self) -> &$old_type {
                                               &self.$identifier
+                                          }
+                                          $generic_ref_comment
+                                          #[inline]
+                                          pub fn generic_as_ref(&self) -> &$old_type {
+                                              &self.$identifier
+                                          }
+
+                                          $mut_method_comment
+                                          #[inline]
+                                          pub fn $mut_method_name(&mut self) -> &mut $old_type {
+                                              &mut self.$identifier
+                                          }
+                                          $generic_mut_comment
+                                          #[inline]
+                                          pub fn generic_as_mut(&mut self) -> &mut $old_type {
+                                              &mut self.$identifier
                                           }
                                       }
                                      );
@@ -96,6 +144,10 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
 fn make_comment(context: &mut ExtCtxt, comment: String) -> Vec<ast::TokenTree> {
     let comment_tokens = comment.as_slice().to_tokens(context);
     quote_tokens!(context, #[doc=$comment_tokens])
+}
+
+fn make_generic_comment(context: &mut ExtCtxt, method: &str, new_type: &str) -> Vec<ast::TokenTree> {
+    make_comment(context, format!("Same as `{method}` but with a generic name. Prefer `{method}` unless you need calls to `{new_type}`'s methods to always continue to compile when the inner type of `{new_type}` is changed.", method=method, new_type=new_type))
 }
 
 fn type_to_ident_str(context: &mut ExtCtxt, span: Span, type_: Ptr<ast::Ty>, format: fn(&[Ascii]) -> String) -> Option<String> {

@@ -1,0 +1,9 @@
+[package]
+
+name = "tests"
+version = "0.0.1"
+authors = ["Robert Murray McMahon <Robert.Murray.McMahon@gmail.com>"]
+
+[dependencies.new_type]
+
+path = "../.."

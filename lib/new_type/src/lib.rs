@@ -88,6 +88,9 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
                                       ///Automatically generated methods from
                                       ///`new_type` syntax extension attribute.
                                       impl $new_type {
+                                          #[inline(always)]
+                                          fn require_copy<T: Copy>(_: &T) {}
+
                                           #[inline]
                                           pub fn new($old_type_name: $old_type) -> $new_type {
                                               $new_type { $identifier: $old_type_name }
@@ -96,11 +99,13 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
                                           $val_method_comment
                                           #[inline]
                                           pub fn $val_method_name(&self) -> $old_type {
+                                              $new_type::require_copy(&self.$identifier);
                                               self.$identifier
                                           }
                                           $generic_as_comment
                                           #[inline]
                                           pub fn generic_as(&self) -> $old_type {
+                                              $new_type::require_copy(&self.$identifier);
                                               self.$identifier
                                           }
 

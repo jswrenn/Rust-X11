@@ -87,6 +87,7 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     let maybe_item_impl = quote_item!(context,
                                       ///Automatically generated methods from
                                       ///`new_type` syntax extension attribute.
+                                      #[allow(dead_code)]
                                       impl $new_type {
                                           #[inline(always)]
                                           fn require_copy<T: Copy>(_: &T) {}

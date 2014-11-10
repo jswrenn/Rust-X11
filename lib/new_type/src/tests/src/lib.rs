@@ -34,3 +34,23 @@ fn equality() {
         }
     }
 }
+
+#[new_type]
+pub struct A<'a,'b,'c> {
+    data: int + 'a + 'b + 'c
+}
+
+#[new_type]
+pub struct B<'a> {
+    data: &'a str
+}
+
+#[new_type]
+pub struct C {
+    data: &'static str
+}
+
+#[new_type]
+pub struct D<'a> {
+    data: &'static str
+}

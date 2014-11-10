@@ -4,6 +4,8 @@
 
 extern crate syntax;
 extern crate rustc;
+#[phase(plugin, link)]
+extern crate log;
 
 use syntax::ast;
 use syntax::codemap::Span;
@@ -54,7 +56,8 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
             return;
         }
     };
-    let new_type = item.ident;
+    let new_type_ident = item.ident;
+    let new_type = quote_ty!(context, $new_type_ident $generics);
     let ref old_type = struct_field.ty;
     let new_type_source = new_type.to_source();
     let old_type_source = old_type.to_source();
@@ -67,46 +70,46 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
     let val_method_str = format!("as_{}", old_type_str);
     let val_method_name = token::str_to_ident(val_method_str.as_slice());
     let val_method_comment = make_comment(context, format!("Returns the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
-    let generic_as_comment = make_generic_comment(context, val_method_str.as_slice(), new_type.as_str());
+    let generic_as_comment = make_generic_comment(context, val_method_str.as_slice(), new_type_source.as_slice());
 
     let into_method_str = format!("into_{}", old_type_str);
     let into_method_name = token::str_to_ident(into_method_str.as_slice());
     let into_method_comment = make_comment(context, format!("Consumes the `{new}` and returns the underlying `{old}`", old=old_type_source, new=new_type_source));
-    let generic_into_comment = make_generic_comment(context, into_method_str.as_slice(), new_type.as_str());
+    let generic_into_comment = make_generic_comment(context, into_method_str.as_slice(), new_type_source.as_slice());
 
     let ref_method_str = format!("as_{}_ref", old_type_str);
     let ref_method_name = token::str_to_ident(ref_method_str.as_slice());
     let ref_method_comment = make_comment(context, format!("Returns a reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
-    let generic_ref_comment = make_generic_comment(context, ref_method_str.as_slice(), new_type.as_str());
+    let generic_ref_comment = make_generic_comment(context, ref_method_str.as_slice(), new_type_source.as_slice());
 
     let mut_method_str = format!("as_{}_mut", old_type_str);
     let mut_method_name = token::str_to_ident(mut_method_str.as_slice());
     let mut_method_comment = make_comment(context, format!("Returns a mutable reference to the underlying `{old}` in the `{new}`.", old=old_type_source, new=new_type_source));
-    let generic_mut_comment = make_generic_comment(context, mut_method_str.as_slice(), new_type.as_str());
+    let generic_mut_comment = make_generic_comment(context, mut_method_str.as_slice(), new_type_source.as_slice());
 
     let maybe_item_impl = quote_item!(context,
                                       ///Automatically generated methods from
                                       ///`new_type` syntax extension attribute.
                                       #[allow(dead_code)]
-                                      impl $new_type {
+                                      impl $generics $new_type {
                                           #[inline(always)]
                                           fn require_copy<T: Copy>(_: &T) {}
 
                                           #[inline]
                                           pub fn new($old_type_name: $old_type) -> $new_type {
-                                              $new_type { $identifier: $old_type_name }
+                                              $new_type_ident { $identifier: $old_type_name }
                                           }
 
                                           $val_method_comment
                                           #[inline]
                                           pub fn $val_method_name(&self) -> $old_type {
-                                              $new_type::require_copy(&self.$identifier);
+                                              $new_type_ident::require_copy(&self.$identifier);
                                               self.$identifier
                                           }
                                           $generic_as_comment
                                           #[inline]
                                           pub fn generic_as(&self) -> $old_type {
-                                              $new_type::require_copy(&self.$identifier);
+                                              $new_type_ident::require_copy(&self.$identifier);
                                               self.$identifier
                                           }
 
@@ -144,7 +147,9 @@ fn expand_new_type(context: &mut ExtCtxt, span: Span,
                                           }
                                       }
                                      );
-    push(maybe_item_impl.expect("Entered unexpected branch in expansion of “new_type” attribute."))
+    let item_impl = maybe_item_impl.expect("Entered unexpected branch in expansion of “new_type” attribute.");
+    debug!("{}", item_impl.to_source());
+    push(item_impl)
 }
 
 fn make_comment(context: &mut ExtCtxt, comment: String) -> Vec<ast::TokenTree> {

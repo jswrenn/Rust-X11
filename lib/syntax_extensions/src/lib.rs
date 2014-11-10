@@ -215,8 +215,7 @@ fn expand_path_transform(context: &mut ExtCtxt, span: Span, tokens: &[ast::Token
                 new_segments.push(
                     ast::PathSegment {
                         identifier: new_ident,
-                        lifetimes: old_segment.lifetimes.clone(),
-                        types: old_segment.types.clone()
+                        parameters: old_segment.parameters.clone()
                     })
             }
             let new_path = ast::Path {
